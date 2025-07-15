@@ -1,0 +1,120 @@
+/* General Body Styles */
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: transparent; /* Required for window transparency */
+  overflow: hidden;
+}
+
+/* Main container with the blur effect */
+.app-container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* This is the magic for the blur effect */
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(24px);
+}
+
+.modal {
+  width: 100%;
+  max-width: 56rem;
+  height: 70vh;
+  background-color: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgb(51, 65, 85);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+header {
+  flex-shrink: 0;
+  padding: 1rem;
+  border-bottom: 1px solid rgb(51, 65, 85);
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: rgb(226, 232, 240);
+  margin: 0;
+}
+
+header p {
+  font-size: 0.875rem;
+  color: rgb(148, 163, 184);
+  margin: 0.25rem 0 0 0;
+}
+
+.grid-container {
+  flex-grow: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.grid-item {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  transform: scale(1);
+  border: 2px solid rgb(51, 65, 85);
+  background-color: rgb(30, 41, 59); /* Placeholder color */
+}
+
+.grid-item.selected {
+  box-shadow: 0 0 0 4px #3b82f6;
+  border-color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.grid-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+}
+
+.check-icon {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: #22c55e;
+  border-radius: 9999px;
+  padding: 0.25rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-container {
+  color: white;
+  background-color: rgba(200, 50, 50, 0.8);
+  padding: 20px;
+  margin: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-family: monospace;
+  border: 2px solid white;
+}
