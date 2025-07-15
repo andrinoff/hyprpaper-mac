@@ -1,23 +1,42 @@
 {
-  "name": "tauri-app",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
+  "name": "hyprpaper-mac",
+  "version": "1.0.0",
+  "description": "A wallpaper selector app for macOS.",
+  "main": "main.js",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
+    "start": "electron .",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "pack": "npm run build && electron-builder --mac"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@tauri-apps/api": "^2.6.0",
-    "@tauri-apps/plugin-opener": "^2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "electron": "^28.1.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2",
-    "@vitejs/plugin-react": "^4.3.4",
-    "vite": "^6.0.3"
+    "@babel/core": "^7.23.7",
+    "@babel/preset-react": "^7.23.3",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.9.0",
+    "electron-builder": "^24.9.1",
+    "html-webpack-plugin": "^5.6.0",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "build": {
+    "appId": "com.yourname.hyprpapermac",
+    "mac": {
+      "target": "dmg"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js"
+    ]
   }
 }
