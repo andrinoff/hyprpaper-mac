@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { createRoot } from "react-dom/client";
 
-// --- SVG Icons ---
+// --- SVG Icon Component ---
 const CheckCircleIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,6 @@ const CheckCircleIcon = () => (
 // --- Lazy Loading Image Component ---
 const LazyImage = ({
   imageName,
-  homeDir,
   isSelected,
   isCurrent,
   onClick,
@@ -35,16 +34,13 @@ const LazyImage = ({
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         observer.unobserve(entry.target);
-        const imagePath = `${homeDir}/wallpapers/${imageName}`;
-        const fileExtension = imageName.split(".").pop().toLowerCase();
-        const mimeType = `image/${
-          fileExtension === "jpg" ? "jpeg" : fileExtension
-        }`;
-
-        // UPDATED: Use the new, efficient API instead of the slow 'base64' command
         window.api
-          .getImageAsBase64(imagePath)
+          .getImageAsBase64(imageName)
           .then((base64Data) => {
+            const fileExtension = imageName.split(".").pop().toLowerCase();
+            const mimeType = `image/${
+              fileExtension === "jpg" ? "jpeg" : fileExtension
+            }`;
             setImageData(`data:${mimeType};base64,${base64Data}`);
           })
           .catch((err) => console.error(`Failed to load ${imageName}:`, err));
@@ -60,7 +56,7 @@ const LazyImage = ({
         observer.unobserve(ref.current);
       }
     };
-  }, [imageName, homeDir]);
+  }, [imageName]);
 
   const itemStyle = {
     ...styles.gridItem,
@@ -94,92 +90,58 @@ const App = () => {
   const [wallpapers, setWallpapers] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentWallpaperName, setCurrentWallpaperName] = useState("");
-  const [homeDir, setHomeDir] = useState("");
   const [backgroundB64, setBackgroundB64] = useState("");
   const [error, setError] = useState(null);
 
-  // Memoized function to load the main background image
-  const loadBackground = useCallback((posixPath) => {
-    if (!posixPath) return;
-    const fileExtension = posixPath.split(".").pop().toLowerCase();
-    const mimeType = `image/${
-      fileExtension === "jpg" ? "jpeg" : fileExtension
-    }`;
+  // Use a ref to store the latest state for the event handler.
+  // This prevents the event handler from becoming stale.
+  const appState = useRef({ wallpapers, selectedIndex });
+  useEffect(() => {
+    appState.current = { wallpapers, selectedIndex };
+  }, [wallpapers, selectedIndex]);
 
-    // UPDATED: Use the new, efficient API
+  // Memoized function to set the macOS wallpaper via IPC
+  const setMacWallpaper = useCallback((imageName) => {
+    if (!imageName) return;
     window.api
-      .getImageAsBase64(posixPath)
-      .then((base64Data) => {
-        setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
+      .setWallpaper(imageName)
+      .then((newPath) => {
+        setCurrentWallpaperName(imageName);
+        // Load the new background
+        window.api.getImageAsBase64(newPath).then((base64Data) => {
+          const fileExtension = newPath.split(".").pop().toLowerCase();
+          const mimeType = `image/${
+            fileExtension === "jpg" ? "jpeg" : fileExtension
+          }`;
+          setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
+        });
+        window.api.hideWindow();
       })
-      .catch(console.error);
+      .catch((err) => console.error("Failed to set wallpaper:", err));
   }, []);
 
-  // Memoized function to set the macOS wallpaper
-  const setMacWallpaper = useCallback(
-    (imageName) => {
-      if (!homeDir || !imageName) return;
-      const fullImagePath = `${homeDir}/wallpapers/${imageName}`;
-      const script = `osascript -e 'tell application "System Events" to tell every desktop to set picture to (POSIX file "${fullImagePath}")'`;
-
-      // Use the 'run' command for osascript
-      window.api
-        .run(script)
-        .then(() => {
-          setCurrentWallpaperName(imageName);
-          loadBackground(fullImagePath);
-          window.api.hideWindow();
-        })
-        .catch((err) => console.error("Failed to set wallpaper:", err));
-    },
-    [homeDir, loadBackground]
-  );
-
-  // Keyboard navigation handler
-  const handleKeyDown = useCallback(
-    (e) => {
+  // Effect to handle keyboard navigation.
+  // This now runs only once and uses the ref to access current state.
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const { wallpapers, selectedIndex } = appState.current;
       const gridCols = 4;
       e.preventDefault();
+
       switch (e.key) {
         case "ArrowUp":
-          setSelectedIndex((prev) => {
-            const newIndex = Math.max(0, prev - gridCols);
-            const el = document.getElementById(
-              `wallpaper-${wallpapers[newIndex]}`
-            );
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            return newIndex;
-          });
+          setSelectedIndex((prev) => Math.max(0, prev - gridCols));
           break;
         case "ArrowDown":
-          setSelectedIndex((prev) => {
-            const newIndex = Math.min(wallpapers.length - 1, prev + gridCols);
-            const el = document.getElementById(
-              `wallpaper-${wallpapers[newIndex]}`
-            );
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            return newIndex;
-          });
+          setSelectedIndex((prev) =>
+            Math.min(wallpapers.length - 1, prev + gridCols)
+          );
           break;
         case "ArrowLeft":
-          setSelectedIndex((prev) => {
-            const newIndex = Math.max(0, prev - 1);
-            const el = document.getElementById(
-              `wallpaper-${wallpapers[newIndex]}`
-            );
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            return newIndex;
-          });
+          setSelectedIndex((prev) => Math.max(0, prev - 1));
           break;
         case "ArrowRight":
-          setSelectedIndex((prev) => {
-            const newIndex = Math.min(wallpapers.length - 1, prev + 1);
-            const el = document.getElementById(
-              `wallpaper-${wallpapers[newIndex]}`
-            );
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            return newIndex;
-          });
+          setSelectedIndex((prev) => Math.min(wallpapers.length - 1, prev + 1));
           break;
         case "Enter":
           if (wallpapers[selectedIndex]) {
@@ -192,51 +154,66 @@ const App = () => {
         default:
           break;
       }
-    },
-    [wallpapers, selectedIndex, setMacWallpaper]
-  );
+    };
 
-  // Initialization effect runs once on mount
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [setMacWallpaper]); // Dependency on setMacWallpaper is stable due to useCallback
+
+  // Effect to scroll the selected item into view smoothly
+  useEffect(() => {
+    if (wallpapers.length > 0 && wallpapers[selectedIndex]) {
+      const el = document.getElementById(
+        `wallpaper-${wallpapers[selectedIndex]}`
+      );
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [selectedIndex, wallpapers]);
+
+  // Initialization effect, runs only ONCE on mount
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        const hDir = await window.api.getHomeDir();
-        setHomeDir(hDir);
-        const wallpaperDir = `${hDir}/wallpapers`;
-
-        const files = await window.api.run(`ls -1 "${wallpaperDir}"`);
-        const wallpaperList = files
-          .split("\n")
-          .filter((file) => file && /\.(jpg|jpeg|png|heic|webp)$/i.test(file));
+        const [wallpaperList, currentPath] = await Promise.all([
+          window.api.getWallpapers(),
+          window.api.getCurrentWallpaper(),
+        ]);
 
         if (wallpaperList.length === 0) {
-          throw new Error(`No wallpapers found in ${wallpaperDir}`);
+          throw new Error(`No wallpapers found in ~/wallpapers`);
         }
         setWallpapers(wallpaperList);
 
-        const currentPath = await window.api.run(
-          `osascript -e 'tell application "System Events" to tell every desktop to get picture'`
-        );
-        setCurrentWallpaperName(currentPath.trim().split("/").pop());
-        loadBackground(currentPath.trim());
+        const currentName = currentPath.trim().split("/").pop();
+        setCurrentWallpaperName(currentName);
+
+        // Load the initial background image
+        window.api.getImageAsBase64(currentPath.trim()).then((base64Data) => {
+          const fileExtension = currentPath.split(".").pop().toLowerCase();
+          const mimeType = `image/${
+            fileExtension === "jpg" ? "jpeg" : fileExtension
+          }`;
+          setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
+        });
+
+        const initialIndex = wallpaperList.findIndex((w) => w === currentName);
+        if (initialIndex !== -1) {
+          setSelectedIndex(initialIndex);
+        }
       } catch (err) {
         console.error("Initialization error:", err);
-        setError(
-          `Could not read wallpapers from: ~/wallpapers. Please make sure this folder exists and isn't empty. Details: ${err.message}`
-        );
+        setError(err.message);
       }
     };
 
     initializeApp();
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown, loadBackground]);
+  }, []); // <-- Empty dependency array ensures this runs only once
 
   const backgroundStyle = {
     ...styles.background,
-    backgroundImage: backgroundB64
-      ? `url(data:image/png;base64,${backgroundB64})`
-      : "none",
+    backgroundImage: backgroundB64 ? `url(${backgroundB64})` : "none",
   };
 
   if (error) {
@@ -268,7 +245,6 @@ const App = () => {
                 <LazyImage
                   key={wallpaper}
                   imageName={wallpaper}
-                  homeDir={homeDir}
                   isSelected={selectedIndex === index}
                   isCurrent={currentWallpaperName === wallpaper}
                   onClick={() => setSelectedIndex(index)}
@@ -313,7 +289,7 @@ const styles = {
     inset: 0,
     backgroundSize: "cover",
     backgroundPosition: "center",
-    transition: "all 1s ease-in-out",
+    transition: "background-image 0.5s ease-in-out",
     transform: "scale(1.1)",
   },
   backdrop: {
