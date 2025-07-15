@@ -2,9 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::fs;
-use tauri::{GlobalShortcutManager, Manager};
 use std::process::Command;
-use std::path::PathBuf;
 use home::home_dir;
 
 // A Command to get the user's home directory
@@ -94,25 +92,7 @@ fn set_wallpaper(name: String) -> Result<(), String> {
 
 
 fn main() {
-    let app = tauri::Builder::default()
-        .setup(|app| {
-            let handle = app.handle();
-            let mut shortcuts = handle.global_shortcut_manager();
-
-            // Register the shortcut
-            shortcuts.register("CmdOrCtrl+Option+P", move || {
-                let window = handle.get_window("main").unwrap();
-                if window.is_visible().unwrap() {
-                    window.hide().unwrap();
-                } else {
-                    window.show().unwrap();
-                    window.set_focus().unwrap();
-                }
-            })
-            .expect("failed to register shortcut");
-
-            Ok(())
-        })
+    tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_home_dir,
             list_wallpapers,
@@ -120,8 +100,6 @@ fn main() {
             get_current_wallpaper,
             set_wallpaper
         ])
-        .build(tauri::generate_context!())
-        .expect("error while building tauri application");
-
-    app.run(|_app_handle, _event| {});
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
 }
