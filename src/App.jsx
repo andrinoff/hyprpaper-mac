@@ -90,11 +90,9 @@ const App = () => {
   const [wallpapers, setWallpapers] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [currentWallpaperName, setCurrentWallpaperName] = useState("");
-  const [backgroundB64, setBackgroundB64] = useState("");
   const [error, setError] = useState(null);
 
   // Use a ref to store the latest state for the event handler.
-  // This prevents the event handler from becoming stale.
   const appState = useRef({ wallpapers, selectedIndex });
   useEffect(() => {
     appState.current = { wallpapers, selectedIndex };
@@ -105,23 +103,16 @@ const App = () => {
     if (!imageName) return;
     window.api
       .setWallpaper(imageName)
-      .then((newPath) => {
+      .then(() => {
+        // We no longer need to update the background inside the app.
+        // The OS wallpaper changes, and we just update the current selection name.
         setCurrentWallpaperName(imageName);
-        // Load the new background
-        window.api.getImageAsBase64(newPath).then((base64Data) => {
-          const fileExtension = newPath.split(".").pop().toLowerCase();
-          const mimeType = `image/${
-            fileExtension === "jpg" ? "jpeg" : fileExtension
-          }`;
-          setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
-        });
         window.api.hideWindow();
       })
       .catch((err) => console.error("Failed to set wallpaper:", err));
   }, []);
 
   // Effect to handle keyboard navigation.
-  // This now runs only once and uses the ref to access current state.
   useEffect(() => {
     const handleKeyDown = (e) => {
       const { wallpapers, selectedIndex } = appState.current;
@@ -158,7 +149,7 @@ const App = () => {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setMacWallpaper]); // Dependency on setMacWallpaper is stable due to useCallback
+  }, [setMacWallpaper]);
 
   // Effect to scroll the selected item into view smoothly
   useEffect(() => {
@@ -189,15 +180,6 @@ const App = () => {
         const currentName = currentPath.trim().split("/").pop();
         setCurrentWallpaperName(currentName);
 
-        // Load the initial background image
-        window.api.getImageAsBase64(currentPath.trim()).then((base64Data) => {
-          const fileExtension = currentPath.split(".").pop().toLowerCase();
-          const mimeType = `image/${
-            fileExtension === "jpg" ? "jpeg" : fileExtension
-          }`;
-          setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
-        });
-
         const initialIndex = wallpaperList.findIndex((w) => w === currentName);
         if (initialIndex !== -1) {
           setSelectedIndex(initialIndex);
@@ -209,12 +191,7 @@ const App = () => {
     };
 
     initializeApp();
-  }, []); // <-- Empty dependency array ensures this runs only once
-
-  const backgroundStyle = {
-    ...styles.background,
-    backgroundImage: backgroundB64 ? `url(${backgroundB64})` : "none",
-  };
+  }, []);
 
   if (error) {
     return (
@@ -229,8 +206,7 @@ const App = () => {
 
   return (
     <div style={styles.container}>
-      <div id="background-div" style={backgroundStyle} />
-      <div style={styles.backdrop} />
+      {/* The modal container now serves as the main backdrop, blurring whatever is behind the window */}
       <div style={styles.modalContainer}>
         <div style={styles.modal}>
           <header style={styles.header}>
@@ -281,29 +257,16 @@ const styles = {
     fontFamily:
       'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     zIndex: 999,
-    borderRadius: "1rem",
-    overflow: "hidden",
   },
-  background: {
-    position: "absolute",
-    inset: 0,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-    transition: "background-image 0.5s ease-in-out",
-    transform: "scale(1.1)",
-  },
-  backdrop: {
-    position: "absolute",
-    inset: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.2)",
-    backdropFilter: "blur(24px)",
-  },
+  // The modal container now provides the blurred, semi-transparent background effect
   modalContainer: {
     position: "fixed",
     inset: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.2)",
+    backdropFilter: "blur(24px)",
   },
   modal: {
     width: "100%",
