@@ -1,10 +1,17 @@
-const { app, BrowserWindow, ipcMain, globalShortcut } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  globalShortcut,
+  screen,
+} = require("electron");
 const path = require("path");
 const fs = require("fs/promises");
 const { exec } = require("child_process");
 const os = require("os");
 
-let mainWindow;
+// Make mainWindow a global variable so we can access it everywhere.
+let mainWindow = null;
 
 // Promisified exec for running osascript commands
 const run = (cmd) =>
@@ -23,9 +30,21 @@ async function setWallpaper(imagePath) {
 }
 
 function createWindow() {
+  // **FIX:** Get the display that currently has focus.
+  const currentDisplay = screen.getDisplayNearestPoint(
+    screen.getCursorScreenPoint()
+  );
+  const { width, height } = currentDisplay.workAreaSize;
+
+  const windowWidth = 900;
+  const windowHeight = 700;
+
   mainWindow = new BrowserWindow({
-    width: 1920,
-    height: 1080,
+    width: windowWidth,
+    height: windowHeight,
+    // Center the window on the currently active screen
+    x: Math.round(currentDisplay.bounds.x + (width - windowWidth) / 2),
+    y: Math.round(currentDisplay.bounds.y + (height - windowHeight) / 2),
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
@@ -33,8 +52,8 @@ function createWindow() {
     },
     frame: false,
     transparent: true,
-    show: false,
-    vibrancy: "ultra-dark",
+    show: false, // Start hidden and show when ready
+    vibrancy: "ultra-dark", // This provides the blurred transparency
     alwaysOnTop: true,
     level: "floating",
     visibleOnAllWorkspaces: true,
@@ -48,24 +67,38 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, "dist/index.html"));
 
-  mainWindow.on("blur", () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide();
-    }
+  // Show the window gracefully when the content is ready.
+  mainWindow.once("ready-to-show", () => {
+    mainWindow.show();
+  });
+
+  // When the window is closed, set its variable to null.
+  // This is crucial for our open/close logic.
+  mainWindow.on("closed", () => {
+    mainWindow = null;
   });
 }
 
 app.whenReady().then(() => {
-  createWindow();
-
+  // Set up the global shortcut to toggle the window's visibility.
   globalShortcut.register("CommandOrControl+Shift+P", () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide();
+    // If the window exists, close it. Otherwise, create it.
+    if (mainWindow) {
+      mainWindow.close();
     } else {
-      mainWindow.show();
-      mainWindow.focus();
+      createWindow();
     }
   });
+});
+
+// **FIX:** Prevent the app from quitting when all windows are closed.
+// This allows the background process to persist.
+app.on("window-all-closed", () => {
+  // On macOS, it's common for applications to stay active until the user
+  // explicitly quits. This line prevents the default quit behavior.
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
 });
 
 app.on("will-quit", () => {
@@ -74,12 +107,10 @@ app.on("will-quit", () => {
 
 // --- IPC Handlers ---
 
-// Handler to get the list of wallpapers from the ~/wallpapers directory
 ipcMain.handle("get-wallpapers", async () => {
   const wallpaperDir = path.join(os.homedir(), "wallpapers");
   try {
     const files = await fs.readdir(wallpaperDir);
-    // Filter for common image file types
     return files.filter((file) => /\.(jpg|jpeg|png|heic|webp)$/i.test(file));
   } catch (error) {
     console.error(`Error reading wallpaper directory: ${wallpaperDir}`, error);
@@ -89,19 +120,17 @@ ipcMain.handle("get-wallpapers", async () => {
   }
 });
 
-// Handler to set the desktop wallpaper
 ipcMain.handle("set-wallpaper", async (event, imageName) => {
   const imagePath = path.join(os.homedir(), "wallpapers", imageName);
   try {
     await setWallpaper(imagePath);
-    return imagePath; // Return the full path to the renderer process
+    return imagePath;
   } catch (error) {
     console.error(`Failed to set wallpaper: ${imageName}`, error);
     throw error;
   }
 });
 
-// Handler to get the current wallpaper's full path
 ipcMain.handle("get-current-wallpaper", async () => {
   try {
     return await run(
@@ -113,18 +142,11 @@ ipcMain.handle("get-current-wallpaper", async () => {
   }
 });
 
-// **FIXED**: Handler to get an image as Base64. It now correctly handles
-// both full paths and simple filenames.
 ipcMain.handle("get-image-as-base64", async (event, fileIdentifier) => {
   let filePath;
-
-  // If the identifier is already an absolute path, use it directly.
-  // This happens when loading the initial background.
   if (path.isAbsolute(fileIdentifier)) {
     filePath = fileIdentifier;
   } else {
-    // Otherwise, construct the full path from the home directory and wallpapers folder.
-    // This happens when loading the grid thumbnails.
     filePath = path.join(os.homedir(), "wallpapers", fileIdentifier);
   }
 
@@ -132,15 +154,14 @@ ipcMain.handle("get-image-as-base64", async (event, fileIdentifier) => {
     const data = await fs.readFile(filePath);
     return data.toString("base64");
   } catch (error) {
-    // Log the error with the full path for easier debugging
     console.error(`Failed to read file: ${filePath}`, error);
-    throw error; // Propagate the error back to the renderer
+    throw error;
   }
 });
 
-// Handler to hide the main window
+// This handler now closes the window instead of just hiding it.
 ipcMain.on("hide-window", () => {
   if (mainWindow) {
-    mainWindow.hide();
+    mainWindow.close();
   }
 });
