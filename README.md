@@ -1,7 +1,7 @@
 # Floatplane
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/andrinoff/floatplane/main/assets/icon.svg" alt="Floatplane Logo" width="128">
+  <img src="assets/icon.svg" alt="Floatplane Logo" width="128">
 </p>
 
 <h3 align="center">A lightweight, floating wallpaper selector for macOS.</h3>
@@ -9,7 +9,6 @@
 <p align="center">
   <img src="https://img.shields.io/github/v/release/andrinoff/floatplane?style=for-the-badge" alt="Version">
   <img src="https://img.shields.io/github/license/andrinoff/floatplane?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/github/actions/workflow/status/andrinoff/floatplane/main.yml?style=for-the-badge" alt="Build Status">
 </p>
 
 ---
@@ -18,7 +17,7 @@ Floatplane is a minimal utility for macOS that lets you quickly browse and set y
 
 ## Demo
 
-![Floatplane Demo](https://raw.githubusercontent.com/andrinoff/floatplane/main/assets/demo.gif)
+![Floatplane Demo](assets/floatplane-preview.gif)
 
 ## Features
 
@@ -41,7 +40,7 @@ Floatplane is a minimal utility for macOS that lets you quickly browse and set y
 1.  **Clone the repository:**
 
     ```sh
-    git clone [https://github.com/andrinoff/floatplane.git](https://github.com/andrinoff/floatplane.git)
+    git clone https://github.com/andrinoff/floatplane.git
     cd floatplane
     ```
 
