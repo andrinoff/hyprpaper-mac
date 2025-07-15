@@ -34,8 +34,9 @@ const LazyImage = ({
     const observer = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting) {
         observer.unobserve(entry.target);
+        // **FIX**: Call the new, fast thumbnail generator
         window.api
-          .getImageAsBase64(imageName)
+          .getThumbnail(imageName)
           .then((base64Data) => {
             const fileExtension = imageName.split(".").pop().toLowerCase();
             const mimeType = `image/${
@@ -43,7 +44,9 @@ const LazyImage = ({
             }`;
             setImageData(`data:${mimeType};base64,${base64Data}`);
           })
-          .catch((err) => console.error(`Failed to load ${imageName}:`, err));
+          .catch((err) =>
+            console.error(`Failed to load thumbnail for ${imageName}:`, err)
+          );
       }
     });
 
@@ -92,27 +95,22 @@ const App = () => {
   const [currentWallpaperName, setCurrentWallpaperName] = useState("");
   const [error, setError] = useState(null);
 
-  // Use a ref to store the latest state for the event handler.
   const appState = useRef({ wallpapers, selectedIndex });
   useEffect(() => {
     appState.current = { wallpapers, selectedIndex };
   }, [wallpapers, selectedIndex]);
 
-  // Memoized function to set the macOS wallpaper via IPC
   const setMacWallpaper = useCallback((imageName) => {
     if (!imageName) return;
     window.api
       .setWallpaper(imageName)
       .then(() => {
-        // We no longer need to update the background inside the app.
-        // The OS wallpaper changes, and we just update the current selection name.
         setCurrentWallpaperName(imageName);
         window.api.hideWindow();
       })
       .catch((err) => console.error("Failed to set wallpaper:", err));
   }, []);
 
-  // Effect to handle keyboard navigation.
   useEffect(() => {
     const handleKeyDown = (e) => {
       const { wallpapers, selectedIndex } = appState.current;
@@ -151,7 +149,6 @@ const App = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [setMacWallpaper]);
 
-  // Effect to scroll the selected item into view smoothly
   useEffect(() => {
     if (wallpapers.length > 0 && wallpapers[selectedIndex]) {
       const el = document.getElementById(
@@ -163,7 +160,6 @@ const App = () => {
     }
   }, [selectedIndex, wallpapers]);
 
-  // Initialization effect, runs only ONCE on mount
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -206,7 +202,6 @@ const App = () => {
 
   return (
     <div style={styles.container}>
-      {/* The modal container now serves as the main backdrop, blurring whatever is behind the window */}
       <div style={styles.modalContainer}>
         <div style={styles.modal}>
           <header style={styles.header}>
@@ -258,7 +253,6 @@ const styles = {
       'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     zIndex: 999,
   },
-  // The modal container now provides the blurred, semi-transparent background effect
   modalContainer: {
     position: "fixed",
     inset: 0,

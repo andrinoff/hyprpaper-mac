@@ -1,6 +1,6 @@
 {
   "name": "floatplane",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "A wallpaper manager app for macOS.",
   "main": "main.js",
   "scripts": {
@@ -14,14 +14,15 @@
   "license": "MIT",
   "dependencies": {
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
-    "electron": "^28.1.3",
     "@babel/core": "^7.23.7",
     "@babel/preset-react": "^7.23.3",
     "babel-loader": "^9.1.3",
     "css-loader": "^6.9.0",
+    "electron": "^28.1.3",
     "electron-builder": "^24.9.1",
     "html-webpack-plugin": "^5.6.0",
     "style-loader": "^3.3.4",
