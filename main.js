@@ -10,7 +10,6 @@ const fs = require("fs/promises");
 const fsSync = require("fs"); // Use sync version for setup
 const { exec } = require("child_process");
 const os = require("os");
-const sharp = require("sharp"); // Import the sharp library
 
 let mainWindow = null;
 
@@ -156,15 +155,13 @@ ipcMain.handle("get-thumbnail", async (event, imageName) => {
     const data = await fs.readFile(thumbPath);
     return data.toString("base64");
   } catch {
-    // If cache miss, generate a new thumbnail
+    // Use native macOS sips command to generate thumbnail
     try {
-      const buffer = await sharp(sourcePath)
-        .resize({ width: 400 }) // Resize to 400px wide, maintaining aspect ratio
-        .toBuffer();
+      const sipsCommand = `sips -Z 400 "${sourcePath}" --out "${thumbPath}"`;
+      await run(sipsCommand);
 
-      // Save the new thumbnail to the cache for next time
-      await fs.writeFile(thumbPath, buffer);
-      return buffer.toString("base64");
+      const data = await fs.readFile(thumbPath);
+      return data.toString("base64");
     } catch (generationError) {
       console.error(
         `Failed to generate thumbnail for ${imageName}:`,
