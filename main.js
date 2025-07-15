@@ -31,14 +31,22 @@ function createWindow() {
     show: false,
     vibrancy: "ultra-dark",
 
-    // --- Settings for tiling window managers ---
-    level: "floating", // Specifically for floating panels
-    visibleOnAllWorkspaces: true, // Show the window on all spaces
-    alwaysOnTop: true, // Keep this for good measure
+    // --- A more robust combination for floating ---
+    alwaysOnTop: true,
+    level: "floating", // 'floating' is the correct level for this kind of panel
+    visibleOnAllWorkspaces: true,
+    resizable: false, // Prevents the window manager from trying to resize it
+    focusable: true, // Ensures the window can accept keyboard input
   });
+
+  // We still hide the dock icon as it helps define the app as a utility
+  if (process.platform === "darwin") {
+    app.dock.hide();
+  }
 
   mainWindow.loadFile(path.join(__dirname, "dist/index.html"));
 
+  // Hide the window when it loses focus
   mainWindow.on("blur", () => {
     if (mainWindow.isVisible()) {
       mainWindow.hide();
