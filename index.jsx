@@ -1,7 +1,7 @@
 import { React, run } from "uebersicht";
 
 // --- Configuration ---
-const WALLPAPERS_PATH = "~/wallpapers"; // The path to your wallpapers folder
+const WALLPAPERS_PATH = "~/wallpapers";
 
 // --- SVG Icons ---
 const CheckCircleIcon = () => (
@@ -22,7 +22,7 @@ const CheckCircleIcon = () => (
 );
 
 // --- Übersicht Widget Configuration ---
-export const command = `ls ${WALLPAPERS_PATH}`;
+export const command = `ls -1 ${WALLPAPERS_PATH}`;
 export const refreshFrequency = false;
 
 // --- Main Widget Component ---
@@ -37,23 +37,103 @@ export const render = ({ output, error }) => {
         Please make sure this folder exists and isn't empty.
         <br />
         <br />
-        Details: {error}
+        Details: {String(error)}
       </div>
     );
   }
-
   return <App initialWallpapers={output} />;
+};
+
+// --- New Component for Lazy Loading Images ---
+const LazyImage = ({
+  imageName,
+  homeDir,
+  isSelected,
+  isCurrent,
+  onClick,
+  onDoubleClick,
+}) => {
+  const [imageData, setImageData] = React.useState(null);
+  const ref = React.useRef();
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        observer.unobserve(entry.target);
+        const imagePath = `${homeDir}/wallpapers/${imageName}`;
+        const fileExtension = imageName.split(".").pop().toLowerCase();
+        const mimeType = `image/${
+          fileExtension === "jpg" ? "jpeg" : fileExtension
+        }`;
+
+        // FIXED: Added the -i flag for the base64 command
+        run(`base64 -i "${imagePath}"`)
+          .then((base64Data) => {
+            setImageData(`data:${mimeType};base64,${base64Data}`);
+          })
+          .catch((err) => console.error(`Failed to load ${imageName}:`, err));
+      }
+    });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [imageName, homeDir]);
+
+  const itemStyle = {
+    ...styles.gridItem,
+    ...(isSelected ? styles.gridItemSelected : {}),
+    backgroundColor: imageData ? "transparent" : "rgb(51, 65, 85)",
+  };
+
+  return (
+    <div
+      ref={ref}
+      id={`wallpaper-${imageName}`}
+      onClick={onClick}
+      onDoubleClick={onDoubleClick}
+      style={itemStyle}
+    >
+      {imageData && (
+        <img src={imageData} alt={imageName} style={styles.image} />
+      )}
+      <div style={styles.imageOverlay} />
+      {isCurrent && (
+        <div style={styles.checkIcon}>
+          <CheckCircleIcon />
+        </div>
+      )}
+    </div>
+  );
 };
 
 // --- React App Component ---
 const App = ({ initialWallpapers }) => {
-  // State management
   const [isOpen, setIsOpen] = React.useState(false);
   const [wallpapers, setWallpapers] = React.useState([]);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [currentWallpaperName, setCurrentWallpaperName] = React.useState("");
-  const [currentWallpaperPath, setCurrentWallpaperPath] = React.useState("");
   const [homeDir, setHomeDir] = React.useState("");
+  const [backgroundB64, setBackgroundB64] = React.useState("");
+
+  const loadBackground = React.useCallback((posixPath) => {
+    const fileExtension = posixPath.split(".").pop().toLowerCase();
+    const mimeType = `image/${
+      fileExtension === "jpg" ? "jpeg" : fileExtension
+    }`;
+    // FIXED: Added the -i flag for the base64 command
+    run(`base64 -i "${posixPath}"`)
+      .then((base64Data) => {
+        setBackgroundB64(`data:${mimeType};base64,${base64Data}`);
+      })
+      .catch(console.error);
+  }, []);
 
   const setMacWallpaper = React.useCallback(
     (imageName) => {
@@ -64,12 +144,12 @@ const App = ({ initialWallpapers }) => {
       run(script)
         .then(() => {
           setCurrentWallpaperName(imageName);
-          setCurrentWallpaperPath(fullImagePath);
+          loadBackground(fullImagePath);
           setIsOpen(false);
         })
         .catch((err) => console.error("Failed to set wallpaper:", err));
     },
-    [homeDir]
+    [homeDir, loadBackground]
   );
 
   const handleToggleClick = React.useCallback((e) => {
@@ -85,7 +165,6 @@ const App = ({ initialWallpapers }) => {
         setIsOpen((prev) => !prev);
         return;
       }
-
       if (!isOpen) return;
 
       const gridCols = 4;
@@ -93,30 +172,43 @@ const App = ({ initialWallpapers }) => {
       switch (e.key) {
         case "ArrowUp":
           setSelectedIndex((prev) => {
-            const newIndex = prev - gridCols < 0 ? prev : prev - gridCols;
-            const el = document.getElementById(`wallpaper-${newIndex}`);
+            const newIndex = Math.max(0, prev - gridCols);
+            const el = document.getElementById(
+              `wallpaper-${wallpapers[newIndex]}`
+            );
             if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
             return newIndex;
           });
           break;
         case "ArrowDown":
           setSelectedIndex((prev) => {
-            const newIndex =
-              prev + gridCols >= wallpapers.length ? prev : prev + gridCols;
-            const el = document.getElementById(`wallpaper-${newIndex}`);
+            const newIndex = Math.min(wallpapers.length - 1, prev + gridCols);
+            const el = document.getElementById(
+              `wallpaper-${wallpapers[newIndex]}`
+            );
             if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
             return newIndex;
           });
           break;
         case "ArrowLeft":
-          setSelectedIndex((prev) => (prev % gridCols === 0 ? prev : prev - 1));
+          setSelectedIndex((prev) => {
+            const newIndex = Math.max(0, prev - 1);
+            const el = document.getElementById(
+              `wallpaper-${wallpapers[newIndex]}`
+            );
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            return newIndex;
+          });
           break;
         case "ArrowRight":
-          setSelectedIndex((prev) =>
-            (prev + 1) % gridCols === 0 || prev + 1 >= wallpapers.length
-              ? prev
-              : prev + 1
-          );
+          setSelectedIndex((prev) => {
+            const newIndex = Math.min(wallpapers.length - 1, prev + 1);
+            const el = document.getElementById(
+              `wallpaper-${wallpapers[newIndex]}`
+            );
+            if (el) el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            return newIndex;
+          });
           break;
         case "Enter":
           if (wallpapers[selectedIndex]) {
@@ -133,49 +225,35 @@ const App = ({ initialWallpapers }) => {
     [isOpen, wallpapers, selectedIndex, setMacWallpaper]
   );
 
-  // Effect #1: Handles loading data from shell commands.
   React.useEffect(() => {
-    if (typeof initialWallpapers !== "string") {
-      return;
-    }
     const wallpaperList = initialWallpapers
       .split("\n")
       .filter((file) => file && /\.(jpg|jpeg|png|heic|webp)$/i.test(file));
     setWallpapers(wallpaperList);
 
-    run("echo $HOME")
-      .then((result) => setHomeDir(result.trim()))
-      .catch((err) => console.error("Failed to get HOME directory:", err));
+    run("echo $HOME").then((result) => setHomeDir(result.trim()));
 
     run(
       `osascript -e 'tell application "System Events" to tell every desktop to get picture'`
-    )
-      .then((path) => {
-        const cleanPath = path.trim();
-        setCurrentWallpaperPath(cleanPath);
-        setCurrentWallpaperName(cleanPath.split("/").pop());
-      })
-      .catch((err) => console.error("Failed to get current wallpaper:", err));
-  }, [initialWallpapers]);
+    ).then((path) => {
+      const cleanPath = path.trim();
+      setCurrentWallpaperName(cleanPath.split("/").pop());
+      loadBackground(cleanPath);
+    });
+  }, [initialWallpapers, loadBackground]);
 
-  // Effect #2: Handles the keyboard event listener.
   React.useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [handleKeyDown]);
 
   const backgroundStyle = {
     ...styles.background,
-    backgroundImage: currentWallpaperPath
-      ? `url(${currentWallpaperPath})`
-      : "none",
+    backgroundImage: backgroundB64 ? `url(${backgroundB64})` : "none",
   };
 
   return (
     <>
-      {/* Toggle button - always visible */}
       <div
         onClick={handleToggleClick}
         style={styles.toggleButton}
@@ -183,7 +261,6 @@ const App = ({ initialWallpapers }) => {
       >
         🖼️
       </div>
-
       {isOpen && (
         <div style={styles.container}>
           <div id="background-div" style={backgroundStyle} />
@@ -198,39 +275,17 @@ const App = ({ initialWallpapers }) => {
               </header>
               <main style={styles.gridContainer}>
                 <div style={styles.grid}>
-                  {wallpapers.map((wallpaper, index) => {
-                    const isSelected = selectedIndex === index;
-                    const isCurrent = currentWallpaperName === wallpaper;
-                    const imagePath = homeDir
-                      ? `${homeDir}/wallpapers/${wallpaper}`
-                      : "";
-                    return (
-                      <div
-                        key={wallpaper}
-                        id={`wallpaper-${index}`}
-                        onClick={() => setSelectedIndex(index)}
-                        onDoubleClick={() => setMacWallpaper(wallpaper)}
-                        style={{
-                          ...styles.gridItem,
-                          ...(isSelected ? styles.gridItemSelected : {}),
-                        }}
-                      >
-                        {imagePath && (
-                          <img
-                            src={imagePath}
-                            alt={wallpaper}
-                            style={styles.image}
-                          />
-                        )}
-                        <div style={styles.imageOverlay} />
-                        {isCurrent && (
-                          <div style={styles.checkIcon}>
-                            <CheckCircleIcon />
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                  {wallpapers.map((wallpaper, index) => (
+                    <LazyImage
+                      key={wallpaper}
+                      imageName={wallpaper}
+                      homeDir={homeDir}
+                      isSelected={selectedIndex === index}
+                      isCurrent={currentWallpaperName === wallpaper}
+                      onClick={() => setSelectedIndex(index)}
+                      onDoubleClick={() => setMacWallpaper(wallpaper)}
+                    />
+                  ))}
                 </div>
               </main>
             </div>
@@ -315,17 +370,12 @@ const styles = {
     color: "rgb(148, 163, 184)",
     margin: "0.25rem 0 0 0",
   },
-  gridContainer: {
-    flexGrow: 1,
-    padding: "1.5rem",
-    overflowY: "auto",
-  },
+  gridContainer: { flexGrow: 1, padding: "1.5rem", overflowY: "auto" },
   grid: {
     display: "grid",
     gridTemplateColumns: "repeat(4, 1fr)",
     gap: "1.5rem",
   },
-  // CHANGED: Replaced shorthand 'border' with longhand properties
   gridItem: {
     position: "relative",
     aspectRatio: "16 / 9",
@@ -343,11 +393,7 @@ const styles = {
     borderColor: "#3b82f6",
     transform: "scale(1.05)",
   },
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-  },
+  image: { width: "100%", height: "100%", objectFit: "cover" },
   imageOverlay: {
     position: "absolute",
     inset: 0,
