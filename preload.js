@@ -5,9 +5,11 @@ contextBridge.exposeInMainWorld("api", {
   setWallpaper: (imageName) => ipcRenderer.invoke("set-wallpaper", imageName),
   getCurrentWallpaper: () => ipcRenderer.invoke("get-current-wallpaper"),
   hideWindow: () => ipcRenderer.send("hide-window"),
-  // Gets full-res image data (used for initial background)
   getImageAsBase64: (fullPath) =>
     ipcRenderer.invoke("get-image-as-base64", fullPath),
-  // **NEW**: Gets thumbnail data for the grid
   getThumbnail: (imageName) => ipcRenderer.invoke("get-thumbnail", imageName),
+  openWallpapersFolder: () => ipcRenderer.invoke("open-wallpapers-folder"),
+  getAppVersion: () => ipcRenderer.invoke("get-app-version"),
+  // **FIXED**: Expose the method to open external links
+  openExternalLink: (url) => ipcRenderer.invoke("open-external-link", url),
 });
