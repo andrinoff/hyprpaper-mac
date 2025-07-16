@@ -55,7 +55,7 @@ function createWindow() {
     frame: false,
     transparent: true,
     show: false,
-    vibrancy: "ultra-dark",
+    vibrancy: "light",
     alwaysOnTop: true,
     level: "floating",
     visibleOnAllWorkspaces: true,
