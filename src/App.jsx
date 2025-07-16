@@ -151,7 +151,7 @@ const App = () => {
   const [error, setError] = useState(null);
   const [isSettingsVisible, setSettingsVisible] = useState(false);
   const [gridCols, setGridCols] = useState(4);
-  const [version, setVersion] = useState(""); // **NEW**: State for app version
+  const [version, setVersion] = useState("");
 
   const appState = useRef({ wallpapers, selectedIndex, gridCols });
   useEffect(() => {
@@ -231,10 +231,10 @@ const App = () => {
         const [wallpaperList, currentPath, appVersion] = await Promise.all([
           window.api.getWallpapers(),
           window.api.getCurrentWallpaper(),
-          window.api.getAppVersion(), // **NEW**: Get app version
+          window.api.getAppVersion(),
         ]);
 
-        setVersion(appVersion); // **NEW**: Set app version
+        setVersion(appVersion);
 
         if (wallpaperList.length === 0) {
           throw new Error(`No wallpapers found in ~/wallpapers`);
@@ -292,23 +292,31 @@ const App = () => {
               ))}
             </div>
           </main>
-          {/* **NEW**: Footer for icons and version */}
           <footer style={styles.footer}>
             <div style={styles.footerLeft}>
               {version && <span style={styles.version}>v{version}</span>}
             </div>
             <div style={styles.footerRight}>
               <button
-                onClick={() => window.api.openWallpapersFolder()}
+                onClick={() => {
+                  window.api.openWallpapersFolder();
+                  window.api.hideWindow();
+                }}
                 style={styles.iconButton}
                 title="Open Wallpapers Folder"
               >
                 <FolderIcon />
               </button>
+              {/* **FIXED**: This now correctly opens the link in the default browser before closing the window */}
               <a
                 href="https://github.com/andrinoff/floatplane"
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  window.api.openExternalLink(
+                    "https://github.com/andrinoff/floatplane"
+                  );
+                  window.api.hideWindow();
+                }}
                 style={styles.iconButton}
                 title="GitHub Repository"
               >
@@ -472,7 +480,6 @@ const styles = {
   slider: {
     width: "100%",
   },
-  // **NEW**: Styles for footer elements
   footer: {
     flexShrink: 0,
     display: "flex",

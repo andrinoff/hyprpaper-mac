@@ -4,7 +4,7 @@ const {
   ipcMain,
   globalShortcut,
   screen,
-  shell, // Import shell module
+  shell, // shell is already here, which is great
 } = require("electron");
 const path = require("path");
 const fs = require("fs/promises");
@@ -101,10 +101,14 @@ app.on("will-quit", () => {
 
 // --- IPC Handlers ---
 
+// **FIXED**: Handler to open external links securely in the user's default browser.
+ipcMain.handle("open-external-link", async (event, url) => {
+  await shell.openExternal(url);
+});
+
 ipcMain.handle("get-wallpapers", async () => {
   const wallpaperDir = path.join(os.homedir(), "wallpapers");
   try {
-    // Ensure the directory exists before trying to read from it
     if (!fsSync.existsSync(wallpaperDir)) {
       fsSync.mkdirSync(wallpaperDir, { recursive: true });
     }
@@ -116,11 +120,9 @@ ipcMain.handle("get-wallpapers", async () => {
   }
 });
 
-// **NEW**: Handler to open the wallpapers folder in Finder
 ipcMain.handle("open-wallpapers-folder", async () => {
   const wallpaperDir = path.join(os.homedir(), "wallpapers");
   try {
-    // Ensure the directory exists before opening
     if (!fsSync.existsSync(wallpaperDir)) {
       fsSync.mkdirSync(wallpaperDir, { recursive: true });
     }
@@ -131,7 +133,6 @@ ipcMain.handle("open-wallpapers-folder", async () => {
   }
 });
 
-// **NEW**: Handler to get the app version from package.json
 ipcMain.handle("get-app-version", () => {
   return app.getVersion();
 });
