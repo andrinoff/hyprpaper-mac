@@ -1,6 +1,6 @@
 {
   "name": "floatplane",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A wallpaper manager app for macOS.",
   "main": "main.js",
   "scripts": {
