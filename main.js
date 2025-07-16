@@ -4,6 +4,7 @@ const {
   ipcMain,
   globalShortcut,
   screen,
+  shell, // Import shell module
 } = require("electron");
 const path = require("path");
 const fs = require("fs/promises");
@@ -103,12 +104,36 @@ app.on("will-quit", () => {
 ipcMain.handle("get-wallpapers", async () => {
   const wallpaperDir = path.join(os.homedir(), "wallpapers");
   try {
+    // Ensure the directory exists before trying to read from it
+    if (!fsSync.existsSync(wallpaperDir)) {
+      fsSync.mkdirSync(wallpaperDir, { recursive: true });
+    }
     const files = await fs.readdir(wallpaperDir);
     return files.filter((file) => /\.(jpg|jpeg|png|heic|webp)$/i.test(file));
   } catch (error) {
     console.error(`Error reading wallpaper directory: ${wallpaperDir}`, error);
     throw new Error(`Could not read wallpapers from: ~/wallpapers.`);
   }
+});
+
+// **NEW**: Handler to open the wallpapers folder in Finder
+ipcMain.handle("open-wallpapers-folder", async () => {
+  const wallpaperDir = path.join(os.homedir(), "wallpapers");
+  try {
+    // Ensure the directory exists before opening
+    if (!fsSync.existsSync(wallpaperDir)) {
+      fsSync.mkdirSync(wallpaperDir, { recursive: true });
+    }
+    await shell.openPath(wallpaperDir);
+  } catch (error) {
+    console.error(`Failed to open wallpaper directory: ${wallpaperDir}`, error);
+    throw error;
+  }
+});
+
+// **NEW**: Handler to get the app version from package.json
+ipcMain.handle("get-app-version", () => {
+  return app.getVersion();
 });
 
 ipcMain.handle("set-wallpaper", async (event, imageName) => {
@@ -133,7 +158,6 @@ ipcMain.handle("get-current-wallpaper", async () => {
   }
 });
 
-// This handler is now only for the full-resolution initial background
 ipcMain.handle("get-image-as-base64", async (event, fullPath) => {
   try {
     const data = await fs.readFile(fullPath);
@@ -144,22 +168,18 @@ ipcMain.handle("get-image-as-base64", async (event, fullPath) => {
   }
 });
 
-// **NEW**: Handler to get a cached thumbnail, creating it if it doesn't exist.
 ipcMain.handle("get-thumbnail", async (event, imageName) => {
   const sourcePath = path.join(os.homedir(), "wallpapers", imageName);
   const thumbPath = path.join(cacheDir, imageName);
 
   try {
-    // Try to read from cache first
     await fs.access(thumbPath);
     const data = await fs.readFile(thumbPath);
     return data.toString("base64");
   } catch {
-    // Use native macOS sips command to generate thumbnail
     try {
       const sipsCommand = `sips -Z 400 "${sourcePath}" --out "${thumbPath}"`;
       await run(sipsCommand);
-
       const data = await fs.readFile(thumbPath);
       return data.toString("base64");
     } catch (generationError) {
