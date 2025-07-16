@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Floatplane - Lightweight Wallpaper Selector for macOS</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="https://github.com/andrinoff/Floatplane/raw/master/assets/icon.svg"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <meta
+      name="description"
+      content="A lightweight, floating wallpaper selector for macOS. Designed to work seamlessly with tiling window managers like Aerospace and yabai."
+    />
+    <meta
+      name="keywords"
+      content="Floatplane, macOS, wallpaper selector, tiling window manager, Aerospace, yabai, Electron, React"
+    />
+    <meta name="author" content="andrinoff" />
+    <meta
+      property="og:title"
+      content="Floatplane - Lightweight Wallpaper Selector for macOS"
+    />
+    <meta
+      property="og:description"
+      content="A lightweight, floating wallpaper selector for macOS. Designed to work seamlessly with tiling window managers like Aerospace and yabai."
+    />
+    <meta
+      property="og:image"
+      content="https://github.com/andrinoff/Floatplane/raw/master/assets/icon.svg"
+    />
+  </head>
+  <body>
+    <header>
+      <nav class="container">
+        <div class="logo">
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 32 32"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect width="32" height="32" rx="6" fill="none" />
+            <g
+              stroke="#ffffff"
+              stroke-width="1.5"
+              fill="none"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <!-- Paper airplane path -->
+              <path d="M5 16.5l9-4.5-2 11.5 3-4.5 5 2-8-14Z" />
+              <!-- Wave path -->
+              <path d="M7 22c2-2.5 4-2.5 6 0s4 2.5 6 0" />
+            </g>
+          </svg>
+        </div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="https://github.com/andrinoff/floatplane">GitHub</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <h1>Floatplane</h1>
+          <div class="css-typing">
+            <p>Best MacOS</p>
+            <p>Wallpaper Manager</p>
+          </div>
+
+          <div class="badges">
+            <span class="badge">MIT License</span>
+            <span class="badge">macOS Only</span>
+            <span class="badge">Electron + React</span>
+          </div>
+
+          <a
+            href="https://github.com/andrinoff/floatplane/releases"
+            class="download-btn"
+          >
+            <span>⬇</span>
+            Download Latest Release
+          </a>
+        </div>
+      </section>
+
+      <section class="demo">
+        <div class="container">
+          <h2>Try It Out</h2>
+          <div class="demo-terminal">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+              </div>
+              <div class="terminal-title">Floatplane Demo</div>
+            </div>
+            <div class="terminal-body">
+              <div class="command-line">
+                <span class="prompt">$</span>
+                <span class="command">Cmd+Shift+P</span>
+              </div>
+              <div class="output">
+                Floatplane window activated...
+                <br />Loading wallpapers from ~/wallpapers/ <br />Found 47
+                wallpapers
+              </div>
+
+              <div class="demo-preview">
+                <div class="floating-window">
+                  <div class="window-header">
+                    <div class="window-title">
+                      Floatplane - Wallpaper Selector
+                    </div>
+                  </div>
+                  <div class="wallpaper-grid">
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb active"></div>
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb"></div>
+                    <div class="wallpaper-thumb"></div>
+                  </div>
+                  <div class="demo-info">
+                    Use arrow keys to navigate • Enter to select • Esc to close
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="features" id="features">
+        <div class="container">
+          <h2>Features</h2>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">🖼️</div>
+              <h3>Instant Preview</h3>
+              <p>
+                Quickly preview wallpapers in a floating window without
+                interrupting your workflow.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🧩</div>
+              <h3>Lightweight</h3>
+              <p>
+                Runs efficiently on macOS using Electron and React, with minimal
+                resource usage.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🧭</div>
+              <h3>Tiling WM Friendly</h3>
+              <p>
+                Built to coexist peacefully with tiling window managers like
+                yabai and Aerospace.
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">📁</div>
+              <h3>Directory Scanning</h3>
+              <p>
+                Automatically detects wallpapers in your preferred folder for
+                easy access.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="installation" id="installation">
+        <div class="container">
+          <h2>Installation</h2>
+          <div class="install-steps">
+            <div class="install-step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3>Download</h3>
+                <p>
+                  Head to the GitHub
+                  <a href="https://github.com/andrinoff/floatplane/releases"
+                    >releases</a
+                  >
+                  page and grab the latest version for macOS.
+                </p>
+              </div>
+            </div>
+            <div class="install-step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3>Move to Applications</h3>
+                <p>
+                  Move the downloaded app into your
+                  <code>/Applications</code> folder.
+                </p>
+              </div>
+            </div>
+            <div class="install-step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3>Launch Floatplane</h3>
+                <p>
+                  Run Floatplane and start selecting your wallpapers instantly
+                  with <code>Cmd+Shift+P</code>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="requirements" id="requirements">
+        <div class="container">
+          <h2>Requirements</h2>
+          <div class="req-list">
+            <ul>
+              <li><code>macOS 11+</code> (Big Sur or later)</li>
+              <li>Electron-compatible hardware</li>
+              <li>
+                Preferred wallpaper directory (e.g., <code>~/wallpapers/</code>)
+              </li>
+              <li>
+                (Optional) Tiling WM like <code>yabai</code> or
+                <code>Aerospace</code>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container footer-content">
+        <div class="footer-links">
+          <a href="#features">Features</a>
+          <a href="#installation">Installation</a>
+          <a href="#requirements">Requirements</a>
+          <a href="https://github.com/andrinoff/floatplane">GitHub</a>
+        </div>
+        <p>&copy; 2025 Floatplane. Crafted by andrinoff. MIT Licensed.</p>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
