@@ -121,8 +121,9 @@ const LazyImage = ({
 
   const itemStyle = {
     ...styles.gridItem,
-    flexBasis: `calc(${100 / gridCols}% - 1.25rem)`,
-    maxWidth: `calc(${100 / gridCols}% - 1.25rem)`,
+    flexBasis: `calc(${100 / gridCols}%)`,
+    maxWidth: `calc(${100 / gridCols}%)`,
+    boxSizing: "border-box",
     ...(isSelected ? styles.gridItemSelected : {}),
     backgroundColor: imageData ? "transparent" : "rgb(17, 24, 39)",
   };
