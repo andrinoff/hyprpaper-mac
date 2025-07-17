@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/andrinoff/Floatplane/compare/v1.3.0...v1.3.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* add checkout in workflow ([4b5c4d0](https://github.com/andrinoff/Floatplane/commit/4b5c4d0334201c0e257670f80560ead0c33644de))
+
 # [1.3.0](https://github.com/andrinoff/Floatplane/compare/v1.2.3...v1.3.0) (2025-07-17)
 
 
