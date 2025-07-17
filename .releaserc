@@ -1,53 +1,41 @@
 {
-  "build": {
-    "appId": "com.andrinoff.floatplane",
-    "productName": "Floatplane",
-    "directories": {
-      "output": "dist-electron"
-    },
-    "compression": "maximum",
-    "mac": {
-      "target": {
-        "target": "dmg",
-        "arch": [
-          "arm64",
-          "x64"
-        ]
-      },
-      "artifactName": "${productName}-${version}-${arch}.${ext}",
-      "icon": "icon.icns",
-      "category": "public.app-category.utilities"
-    },
-    "dmg": {
-      "window": {
-        "width": 540,
-        "height": 380
-      },
-      "contents": [
-        {
-          "x": 130,
-          "y": 186,
-          "type": "file"
-        },
-        {
-          "x": 410,
-          "y": 186,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "files": [
-      "dist/**/*",
-      "main.js",
-      "preload.js",
-      "package.json",
-      "!**/node_modules/**/*",
-      "!src/**/*",
-      "!webpack.config.js",
-      "!*.md"
+  "branches": [
+    "master"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "npm version ${nextRelease.version} --no-git-tag-version && npm run pack"
+      }
     ],
-    "asar": true,
-    "asarUnpack": []
-  }
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "dist-electron/*-arm64.dmg",
+            "label": "macOS Installer (Apple Silicon)"
+          },
+          {
+            "path": "dist-electron/*-.dmg",
+            "label": "macOS Installer (Intel)"
+          }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md",
+          "package.json"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ]
+  ]
 }

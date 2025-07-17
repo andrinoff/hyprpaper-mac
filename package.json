@@ -1,45 +1,4 @@
 {
-  "name": "floatplane",
-  "version": "1.2.1",
-  "description": "A wallpaper manager app for macOS.",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "build": "webpack --mode production",
-    "watch": "webpack --mode development --watch",
-    "pack": "npm run build && electron-builder --mac",
-    "dist": "npm run build && electron-builder --mac --publish=never",
-    "clean": "rm -rf dist node_modules package-lock.json && npm install"
-  },
-  "keywords": [
-    "wallpaper",
-    "macOS",
-    "desktop"
-  ],
-  "author": "andrinoff",
-  "license": "MIT",
-  "dependencies": {
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^13.0.1",
-    "@semantic-release/exec": "^7.1.0",
-    "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^11.0.3",
-    "@semantic-release/release-notes-generator": "^14.0.3",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.23.7",
-    "@babel/preset-react": "^7.23.3",
-    "babel-loader": "^10.0.0",
-    "css-loader": "^7.0.0",
-    "electron": "^37.0.0",
-    "electron-builder": "^26.0.0",
-    "html-webpack-plugin": "^5.6.0",
-    "style-loader": "^3.3.4",
-    "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
-  },
   "build": {
     "appId": "com.andrinoff.floatplane",
     "productName": "Floatplane",
@@ -55,6 +14,7 @@
           "x64"
         ]
       },
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities"
     },
