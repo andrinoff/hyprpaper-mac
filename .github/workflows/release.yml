@@ -23,3 +23,43 @@ jobs:
         run: npx semantic-release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  update-homebrew-cask:
+    name: Update Homebrew Cask
+    needs: release # Make this job wait for your 'release' job to succeed
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get new version tag
+        run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+
+      - name: Download release assets
+        run: |
+          gh release download ${{ env.RELEASE_VERSION }} --pattern 'Floatplane-*.dmg'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calculate checksums
+        run: |
+          echo "ARM64_SHA=$(shasum -a 256 Floatplane-${{ env.RELEASE_VERSION }}-arm64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "X64_SHA=$(shasum -a 256 Floatplane-${{ env.RELEASE_VERSION }}-x64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+
+      - name: Clone Homebrew tap repository
+        run: |
+          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/andrinoff/homebrew-floatplane.git
+
+      - name: Update Cask file
+        run: |
+          cd homebrew-floatplane
+          # Remove 'v' prefix from version tag for the cask file
+          VERSION_NUMBER=${{ env.RELEASE_VERSION }}
+          sed -i "s/version \".*\"/version \"${VERSION_NUMBER#v}\"/" Casks/floatplane.rb
+          sed -i "/on_arm do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.ARM64_SHA }}\"/" Casks/floatplane.rb
+          sed -i "/on_intel do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.X64_SHA }}\"/" Casks/floatplane.rb
+
+      - name: Commit and push changes
+        run: |
+          cd homebrew-floatplane
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/floatplane.rb
+          git commit -m "Update cask for Floatplane version ${{ env.RELEASE_VERSION }}"
+          git push
