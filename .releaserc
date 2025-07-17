@@ -5,6 +5,12 @@
     "@semantic-release/release-notes-generator",
     "@semantic-release/changelog",
     [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "npm run pack"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
