@@ -1,0 +1,3 @@
+[submodule "homebrew-floatplane"]
+	path = homebrew-floatplane
+	url = git@github.com:andrinoff/homebrew-floatplane
