@@ -1,3 +1,45 @@
+# [1.4.0](https://github.com/andrinoff/Floatplane/compare/v1.3.5...v1.4.0) (2025-07-17)
+
+
+### Bug Fixes
+
+* accidentally change the wrong file ([a9227b4](https://github.com/andrinoff/Floatplane/commit/a9227b42bfd2eb159922262c08b8065e2e40d264))
+* actions to homebrew cask update ([8211d57](https://github.com/andrinoff/Floatplane/commit/8211d575002f2b923028cc4a98049d44ff777e70))
+* add checkout in workflow ([930e3ed](https://github.com/andrinoff/Floatplane/commit/930e3edc779394782a8568a8ba162a8f3531bd72))
+* added exec ([92969fd](https://github.com/andrinoff/Floatplane/commit/92969fddac3c40df64d59ce50c7bfedfb30798a7))
+* borders ([b2f062c](https://github.com/andrinoff/Floatplane/commit/b2f062c26c16f843520990d1f75fe9be55f33254))
+* change version ([43562b9](https://github.com/andrinoff/Floatplane/commit/43562b9d81a88bb03b3e1aa821bdad11995c1c43))
+* close UI on redirect ([0c0d376](https://github.com/andrinoff/Floatplane/commit/0c0d3762ce801ad9a2d7b8e5b67b05e589204a94))
+* deps ([a8fd6c0](https://github.com/andrinoff/Floatplane/commit/a8fd6c0b0bb0b40d0d20b4636536a2c7c0ddf1ab))
+* **docs:** update GIF ([555092f](https://github.com/andrinoff/Floatplane/commit/555092fd013d2e931f027b79641d1e97cc4aae16))
+* err GithubIcon alrdy taken ([ce76482](https://github.com/andrinoff/Floatplane/commit/ce76482722830f547f31262adc5dcba20e7eca85))
+* err permission denied ([f5722ec](https://github.com/andrinoff/Floatplane/commit/f5722ecd2f575baa0d22b9e1164b55bbdd9a4417))
+* release assets ([8a56150](https://github.com/andrinoff/Floatplane/commit/8a56150f56c3f025fb1be5919542976a72fef8ff))
+* release assets ([6a9b4b3](https://github.com/andrinoff/Floatplane/commit/6a9b4b3c621efa948352f4129a19bd122614da6d))
+* semantic ([9f79b65](https://github.com/andrinoff/Floatplane/commit/9f79b65f9bc19c4329198021781d0910198c0aeb))
+* settings style ([162d897](https://github.com/andrinoff/Floatplane/commit/162d897a56405c714e32b01c836ee955c0afd53f))
+* something i hope ([8f02cf4](https://github.com/andrinoff/Floatplane/commit/8f02cf4999f0e0a121c434ce0c8fb499ce6f4253))
+* trailing curly bracket ([00d1c0b](https://github.com/andrinoff/Floatplane/commit/00d1c0b44ffa0eeaf33b8d95655c393b3b1e51c3))
+* update dev deps ([cf56716](https://github.com/andrinoff/Floatplane/commit/cf5671622c83d20a1754689ca905b0cb90467cb5))
+* updated version ([453ee83](https://github.com/andrinoff/Floatplane/commit/453ee83473cc9f2dcc0eaee7628c00635c62d4ef))
+* version control ([5b505fa](https://github.com/andrinoff/Floatplane/commit/5b505fa02460c9f2fe40fb29469a79b96b6e112a))
+* version control ([df56b7c](https://github.com/andrinoff/Floatplane/commit/df56b7c5ff8dda70a49648786a6dc4b187dbb639))
+* version patter ([2a48e5f](https://github.com/andrinoff/Floatplane/commit/2a48e5fef354c686bf09aa5014397cf62c38cb77))
+* **version:** 0.1.5 ([99064b4](https://github.com/andrinoff/Floatplane/commit/99064b4834b6347276ffe5fd217d78c7d9cb72a4))
+
+
+### Features
+
+* auto-release ([c2f0a9e](https://github.com/andrinoff/Floatplane/commit/c2f0a9ebbaefe33e69a6b5ea122358bb2c2b74f8))
+* cyber UI ([c4ae3f5](https://github.com/andrinoff/Floatplane/commit/c4ae3f5aa4b9a677da8ac97d0c0d9f0de7962d66))
+* homebrew tap ([d1f0d27](https://github.com/andrinoff/Floatplane/commit/d1f0d27d84a4590c0e533f1e9afc7895199d2d81))
+* **public:** nojekyll ([d345f53](https://github.com/andrinoff/Floatplane/commit/d345f53f609a1ef65a233bd8eaf54be9fa0d663b))
+* **public:** website added ([c0da5ef](https://github.com/andrinoff/Floatplane/commit/c0da5ef5d8e466b72b41b819b22acbe14893ee3c))
+* settings menu ([c85613b](https://github.com/andrinoff/Floatplane/commit/c85613b779175c931442d7d2ac4092bb3291e8de))
+* settings menu ([f6acc4b](https://github.com/andrinoff/Floatplane/commit/f6acc4b26f0d857582ae3d6cae16f51f9c85e564))
+* version and links ([1f1ebd0](https://github.com/andrinoff/Floatplane/commit/1f1ebd0216d7fe5f4b47e71717617441ba191ac0))
+* website updated ([0de7ab9](https://github.com/andrinoff/Floatplane/commit/0de7ab91aa3c0df3c65f5fba08b844b3c58bb2b9))
+
 ## [1.3.5](https://github.com/andrinoff/Floatplane/compare/v1.3.4...v1.3.5) (2025-07-17)
 
 
