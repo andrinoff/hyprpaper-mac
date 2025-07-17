@@ -8,6 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -81,13 +82,10 @@
             <span class="badge">MIT License</span>
             <span class="badge">macOS Only</span>
             <span class="badge">Electron + React</span>
+            <span class="badge">⭐ <span id="github-stars">...</span></span>
           </div>
 
-          <a
-            href="https://github.com/andrinoff/floatplane/releases"
-            class="download-btn"
-            id="download-link"
-          >
+          <a href="#installation" class="download-btn" id="download-link">
             <span>⬇</span>
             Download Latest (<span id="latest-version">...</span>)
           </a>
@@ -104,7 +102,6 @@
                 <div class="terminal-dot yellow"></div>
                 <div class="terminal-dot green"></div>
               </div>
-              <div class="terminal-title">zsh</div>
             </div>
             <div class="terminal-body">
               <div class="command-line">
@@ -214,6 +211,60 @@
       <section class="installation" id="installation">
         <div class="container">
           <h2>Installation</h2>
+          <h3 style="text-align: center; margin-bottom: 2rem">
+            Install with Homebrew (Recommended)
+          </h3>
+          <div class="demo-terminal" style="max-width: 800px; margin: 0 auto">
+            <div class="terminal-header">
+              <div class="terminal-dots">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+              </div>
+              <button
+                class="copy-btn header-copy-btn"
+                data-clipboard-text="brew tap andrinoff/floatplane && brew install floatplane && xattr -cr /Applications/Floatplane.app"
+                aria-label="Copy install commands"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path
+                    d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                  ></path>
+                </svg>
+                <span>Copy All</span>
+              </button>
+            </div>
+            <div class="terminal-body">
+              <div class="command-line">
+                <span class="prompt">~ $</span>
+                <span class="command">brew tap andrinoff/floatplane</span>
+              </div>
+              <div class="command-line">
+                <span class="prompt">~ $</span>
+                <span class="command">brew install floatplane</span>
+              </div>
+              <div class="command-line">
+                <span class="prompt">~ $</span>
+                <span class="command"
+                  >xattr -cr /Applications/Floatplane.app</span
+                >
+              </div>
+            </div>
+          </div>
+          <h3 style="text-align: center; margin-top: 3rem; margin-bottom: 2rem">
+            Or, Manually Install
+          </h3>
           <div class="install-steps">
             <div class="install-step">
               <div class="step-number">1</div>

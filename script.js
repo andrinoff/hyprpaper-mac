@@ -13,42 +13,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- Fetch Latest Release from GitHub ---
+  // --- Fetch Latest Release and Stars from GitHub ---
   const repo = "andrinoff/floatplane";
   const versionSpan = document.getElementById("latest-version");
-  const downloadLink = document.getElementById("download-link");
   const installLink = document.getElementById("install-link");
+  const starsSpan = document.getElementById("github-stars");
 
-  async function fetchLatestRelease() {
+  async function fetchRepoInfo() {
     try {
-      const response = await fetch(
+      // Fetch release info
+      const releaseResponse = await fetch(
         `https://api.github.com/repos/${repo}/releases/latest`
       );
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (!releaseResponse.ok) {
+        throw new Error(`HTTP error! status: ${releaseResponse.status}`);
       }
-      const data = await response.json();
-      const latestVersion = data.tag_name;
-      const releaseUrl = data.html_url;
+      const releaseData = await releaseResponse.json();
+      const latestVersion = releaseData.tag_name;
+      const releaseUrl = releaseData.html_url;
 
       if (versionSpan) {
         versionSpan.textContent = latestVersion;
       }
-      if (downloadLink) {
-        downloadLink.href = releaseUrl;
-      }
       if (installLink) {
         installLink.href = releaseUrl;
       }
+
+      // Fetch repo info for stars
+      const repoResponse = await fetch(`https://api.github.com/repos/${repo}`);
+      if (!repoResponse.ok) {
+        throw new Error(`HTTP error! status: ${repoResponse.status}`);
+      }
+      const repoData = await repoResponse.json();
+      const starCount = repoData.stargazers_count;
+
+      if (starsSpan) {
+        starsSpan.textContent = starCount;
+      }
     } catch (error) {
-      console.error("Could not fetch latest release:", error);
+      console.error("Could not fetch GitHub data:", error);
       if (versionSpan) {
         versionSpan.textContent = "N/A";
+      }
+      if (starsSpan) {
+        starsSpan.textContent = "N/A";
       }
     }
   }
 
-  fetchLatestRelease();
+  fetchRepoInfo();
 
   // Interactive hover effects for feature cards
   document.querySelectorAll(".feature-card").forEach((card) => {
@@ -61,4 +74,21 @@ document.addEventListener("DOMContentLoaded", () => {
       this.style.borderColor = "var(--border)";
     });
   });
+});
+// --- Initialize Clipboard.js ---
+const clipboard = new ClipboardJS(".copy-btn");
+
+clipboard.on("success", function (e) {
+  const originalText = e.trigger.textContent;
+  e.trigger.textContent = "Copied!";
+  setTimeout(() => {
+    e.trigger.textContent = originalText;
+  }, 2000);
+  e.clearSelection();
+});
+
+clipboard.on("error", function (e) {
+  console.error("Action:", e.action);
+  console.error("Trigger:", e.trigger);
+  // You can add a fallback here, e.g., prompt the user to copy manually.
 });
