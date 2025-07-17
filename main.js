@@ -13,11 +13,35 @@ const { exec } = require("child_process");
 const os = require("os");
 
 let mainWindow = null;
+let settingsWindow = null;
 
 // --- App Setup: Create Thumbnail Cache Directory ---
 const cacheDir = path.join(app.getPath("userData"), "thumbnails");
 if (!fsSync.existsSync(cacheDir)) {
   fsSync.mkdirSync(cacheDir, { recursive: true });
+}
+
+// --- Settings File Setup ---
+const settingsPath = path.join(app.getPath("userData"), "settings.json");
+
+async function getSettings() {
+  try {
+    await fs.access(settingsPath);
+    const settingsFile = await fs.readFile(settingsPath, "utf-8");
+    return JSON.parse(settingsFile);
+  } catch (error) {
+    // If the file doesn't exist or there's an error, return default settings
+    const defaultSettings = {
+      theme: "tokyo-night-blue",
+      openCommand: "CommandOrControl+Shift+P",
+    };
+    await saveSettings(defaultSettings);
+    return defaultSettings;
+  }
+}
+
+async function saveSettings(settings) {
+  await fs.writeFile(settingsPath, JSON.stringify(settings, null, 2));
 }
 
 const run = (cmd) =>
@@ -64,6 +88,8 @@ function createWindow() {
     focusable: true,
   });
 
+  console.log("Main window created.");
+
   if (process.platform === "darwin") {
     app.dock.hide();
   }
@@ -79,8 +105,18 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(() => {
-  globalShortcut.register("CommandOrControl+Shift+P", () => {
+ipcMain.on("toggle-settings", () => {
+  if (mainWindow) {
+    mainWindow.webContents.send("toggle-settings");
+  }
+});
+
+app.whenReady().then(async () => {
+  console.log("App is ready.");
+  const settings = await getSettings();
+  console.log("Settings loaded:", settings);
+  globalShortcut.register(settings.openCommand, () => {
+    console.log("Global shortcut triggered.");
     if (mainWindow) {
       mainWindow.close();
     } else {
@@ -100,6 +136,50 @@ app.on("will-quit", () => {
 });
 
 // --- IPC Handlers ---
+
+
+
+ipcMain.handle("get-settings", async () => {
+  return await getSettings();
+});
+
+ipcMain.handle("save-settings", async (event, settings) => {
+  await saveSettings(settings);
+  // You might want to re-register the shortcut if it changed
+  globalShortcut.unregisterAll();
+  const newSettings = await getSettings();
+  globalShortcut.register(newSettings.openCommand, () => {
+    if (mainWindow) {
+      mainWindow.close();
+    } else {
+      createWindow();
+    }
+  });
+  if (mainWindow) {
+    mainWindow.webContents.send("theme-updated", newSettings.theme);
+  }
+});
+
+ipcMain.handle("get-themes", async () => {
+  const themeDir = path.join(__dirname, "src/themes");
+  try {
+    const files = await fs.readdir(themeDir);
+    const themes = await Promise.all(
+      files.map(async (file) => {
+        if (file.endsWith(".json")) {
+          const filePath = path.join(themeDir, file);
+          const content = await fs.readFile(filePath, "utf-8");
+          return JSON.parse(content);
+        }
+        return null;
+      })
+    );
+    return themes.filter((theme) => theme !== null);
+  } catch (error) {
+    console.error(`Error reading theme directory: ${themeDir}`, error);
+    return [];
+  }
+});
 
 // **FIXED**: Handler to open external links securely in the user's default browser.
 ipcMain.handle("open-external-link", async (event, url) => {

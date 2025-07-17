@@ -3,13 +3,15 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   // The entry point for the renderer process
-  entry: "./src/App.jsx",
+  entry: {
+    main: "./src/App.jsx",
+  },
   // Target the electron renderer process
   target: "electron-renderer",
   // Where the bundled code will be output
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: "bundle.js",
+    filename: "[name].bundle.js",
   },
   // Rules for how to handle different file types
   module: {
@@ -40,6 +42,9 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html",
+      filename: "index.html",
+      chunks: ["main"],
     }),
+    
   ],
 };
