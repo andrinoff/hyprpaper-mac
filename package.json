@@ -56,6 +56,7 @@
           "x64"
         ]
       },
+      "identity": null,
       "artifactName": "${productName}-${version}-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities"
