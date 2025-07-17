@@ -1,3 +1,14 @@
+## [1.2.2](https://github.com/andrinoff/Floatplane/compare/v1.2.1...v1.2.2) (2025-07-17)
+
+
+### Bug Fixes
+
+* accidentally change the wrong file ([b05b54e](https://github.com/andrinoff/Floatplane/commit/b05b54ec480dbb8642bfe5bab42a83ba0653e36e))
+* release assets ([a616182](https://github.com/andrinoff/Floatplane/commit/a61618207d8c0650815536abe036322a67cbbc9a))
+* trailing curly bracket ([cabd3ac](https://github.com/andrinoff/Floatplane/commit/cabd3acfe76e90232ff388c2657a70c5bde2d05d))
+* version control ([1d9fc68](https://github.com/andrinoff/Floatplane/commit/1d9fc68cfac0b3cea6864c7af9e32e1dfa0d77d3))
+* version control ([a7d2d13](https://github.com/andrinoff/Floatplane/commit/a7d2d13a0a8b895370b796bc41c7553856d45a8c))
+
 ## [1.2.1](https://github.com/andrinoff/Floatplane/compare/v1.2.0...v1.2.1) (2025-07-17)
 
 
