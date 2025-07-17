@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/andrinoff/Floatplane/compare/v1.3.4...v1.3.5) (2025-07-17)
+
+
+### Bug Fixes
+
+* err permission denied ([19edfc7](https://github.com/andrinoff/Floatplane/commit/19edfc797f04ab6c6e4a8f6bc73b31f13c9577e9))
+
 ## [1.3.4](https://github.com/andrinoff/Floatplane/compare/v1.3.3...v1.3.4) (2025-07-17)
 
 
