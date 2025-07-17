@@ -20,7 +20,7 @@ const FolderIcon = () => (
   </svg>
 );
 
-const GithubIcon = () => (
+const GithubIco = () => (
   <svg
     width="20"
     height="20"
@@ -422,7 +422,7 @@ const App = () => {
                 style={styles.iconButton}
                 title="GitHub Repository"
               >
-                <GithubIcon />
+                <GithubIco />
               </a>
             </div>
           </footer>
