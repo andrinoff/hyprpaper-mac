@@ -48,17 +48,12 @@
     },
     "compression": "maximum",
     "mac": {
-      "target": [
-        {
-          "target": "dmg",
-          "arch": "arm64"
-        },
-        {
-          "target": "dmg",
-          "arch": "x64",
-          "artifactName": "${productName}-${version}-x64.${ext}"
-        }
+      "target": "dmg",
+      "arch": [
+        "arm64",
+        "x64"
       ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}",
       "icon": "icon.icns",
       "category": "public.app-category.utilities"
     },
