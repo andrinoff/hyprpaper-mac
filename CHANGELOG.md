@@ -1,3 +1,10 @@
+## [1.4.4](https://github.com/andrinoff/floatpane/compare/v1.4.3...v1.4.4) (2025-07-17)
+
+
+### Bug Fixes
+
+* imlemented new name ([5ae22de](https://github.com/andrinoff/floatpane/commit/5ae22dedda097c2b8020ee502cef368d1e751470))
+
 ## [1.4.3](https://github.com/andrinoff/floatpane/compare/v1.4.2...v1.4.3) (2025-07-17)
 
 
