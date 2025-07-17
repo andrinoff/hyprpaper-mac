@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/andrinoff/Floatplane/compare/v1.3.3...v1.3.4) (2025-07-17)
+
+
+### Bug Fixes
+
+* version patter ([5c3247f](https://github.com/andrinoff/Floatplane/commit/5c3247fb078a3163b8a60ce583628d51be34fa03))
+
 ## [1.3.3](https://github.com/andrinoff/Floatplane/compare/v1.3.2...v1.3.3) (2025-07-17)
 
 
