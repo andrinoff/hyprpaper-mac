@@ -52,6 +52,25 @@
       "icon": "icon.icns",
       "category": "public.app-category.utilities"
     },
+    "dmg": {
+      "window": {
+        "width": 540,
+        "height": 380
+      },
+      "contents": [
+        {
+          "x": 130,
+          "y": 186,
+          "type": "file"
+        },
+        {
+          "x": 410,
+          "y": 186,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
     "files": [
       "dist/**/*",
       "main.js",
