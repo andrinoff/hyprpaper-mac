@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/andrinoff/Floatplane/compare/v1.4.0...v1.4.1) (2025-07-17)
+
+
+### Bug Fixes
+
+* wallpaper previews ([8ba10d4](https://github.com/andrinoff/Floatplane/commit/8ba10d4433f7aee7d89eb63447f5da80bc50f7cf))
+
 # [1.4.0](https://github.com/andrinoff/Floatplane/compare/v1.3.5...v1.4.0) (2025-07-17)
 
 
