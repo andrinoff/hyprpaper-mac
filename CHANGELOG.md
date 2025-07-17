@@ -1,3 +1,10 @@
+## [1.4.3](https://github.com/andrinoff/Floatplane/compare/v1.4.2...v1.4.3) (2025-07-17)
+
+
+### Bug Fixes
+
+* null identity ([c6eefa9](https://github.com/andrinoff/Floatplane/commit/c6eefa95d0a4604c92e9cd54f41cf5d80cafde33))
+
 ## [1.4.2](https://github.com/andrinoff/Floatplane/compare/v1.4.1...v1.4.2) (2025-07-17)
 
 
