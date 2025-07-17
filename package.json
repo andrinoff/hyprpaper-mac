@@ -1,6 +1,6 @@
 {
   "name": "floatplane",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A wallpaper manager app for macOS.",
   "main": "main.js",
   "scripts": {
@@ -91,16 +91,16 @@
     "asar": true,
     "asarUnpack": []
   },
-    "files": [
-      "dist/**/*",
-      "main.js",
-      "preload.js",
-      "package.json",
-      "!**/node_modules/**/*",
-      "!src/**/*",
-      "!webpack.config.js",
-      "!*.md"
-    ],
-    "asar": true,
-    "asarUnpack": []
-  }
+  "files": [
+    "dist/**/*",
+    "main.js",
+    "preload.js",
+    "package.json",
+    "!**/node_modules/**/*",
+    "!src/**/*",
+    "!webpack.config.js",
+    "!*.md"
+  ],
+  "asar": true,
+  "asarUnpack": []
+}
