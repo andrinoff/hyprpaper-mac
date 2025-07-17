@@ -19,9 +19,7 @@ jobs:
           node-version: 21
       - name: Install Dependencies
         run: npm install
-      - name: Build and Package
-        run: npm run pack
       - name: Release
         run: npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
