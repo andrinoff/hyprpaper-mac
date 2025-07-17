@@ -46,7 +46,7 @@ jobs:
 
       - name: Download release assets
         run: |
-          gh release download ${{ env.RELEASE_VERSION }} --pattern "Floatplane-*.dmg" --repo ${{ github.repository }}
+          gh release download v${{ env.RELEASE_VERSION }} --pattern "Floatplane-*.dmg" --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
