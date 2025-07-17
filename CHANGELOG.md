@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/andrinoff/Floatplane/compare/v1.2.3...v1.3.0) (2025-07-17)
+
+
+### Features
+
+* homebrew tap ([8468cb0](https://github.com/andrinoff/Floatplane/commit/8468cb00195a47d9b739835778c86c3f6b26510d))
+
 ## [1.2.3](https://github.com/andrinoff/Floatplane/compare/v1.2.2...v1.2.3) (2025-07-17)
 
 
