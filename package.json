@@ -42,8 +42,8 @@
     "webpack-cli": "^5.1.4"
   },
   "build": {
-    "appId": "com.andrinoff.floatplane",
-    "productName": "Floatplane",
+    "appId": "com.andrinoff.floatpane",
+    "productName": "floatpane",
     "directories": {
       "output": "dist-electron"
     },

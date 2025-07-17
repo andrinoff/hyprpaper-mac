@@ -46,7 +46,7 @@ jobs:
 
       - name: Download release assets
         run: |
-          gh release download v${{ env.RELEASE_VERSION }} --pattern "Floatplane-*.dmg" --repo ${{ github.repository }}
+          gh release download v${{ env.RELEASE_VERSION }} --pattern "floatpane-*.dmg" --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,28 +55,28 @@ jobs:
           VERSION_NUMBER=${{ env.RELEASE_VERSION }}
           # Remove 'v' prefix for filename, which matches your electron-builder artifactName
           VERSION_NUMBER_NO_V=${VERSION_NUMBER#v}
-          echo "ARM64_SHA=$(shasum -a 256 Floatplane-${VERSION_NUMBER_NO_V}-arm64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
-          echo "X64_SHA=$(shasum -a 256 Floatplane-${VERSION_NUMBER_NO_V}-x64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "ARM64_SHA=$(shasum -a 256 floatpane-${VERSION_NUMBER_NO_V}-arm64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "X64_SHA=$(shasum -a 256 floatpane-${VERSION_NUMBER_NO_V}-x64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Clone Homebrew tap repository
         run: |
-          git clone https://x-access-token:${{ secrets.PAT }}@github.com/andrinoff/homebrew-floatplane.git
+          git clone https://x-access-token:${{ secrets.PAT }}@github.com/andrinoff/homebrew-floatpane.git
 
       - name: Update Cask file
         run: |
-          cd homebrew-floatplane
+          cd homebrew-floatpane
           VERSION_NUMBER=${{ env.RELEASE_VERSION }}
           # Remove 'v' prefix from version tag for the cask file
           VERSION_NUMBER_NO_V=${VERSION_NUMBER#v}
-          sed -i "s/version \".*\"/version \"${VERSION_NUMBER_NO_V}\"/" Casks/floatplane.rb
-          sed -i "/on_arm do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.ARM64_SHA }}\"/" Casks/floatplane.rb
-          sed -i "/on_intel do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.X64_SHA }}\"/" Casks/floatplane.rb
+          sed -i "s/version \".*\"/version \"${VERSION_NUMBER_NO_V}\"/" Casks/floatpane.rb
+          sed -i "/on_arm do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.ARM64_SHA }}\"/" Casks/floatpane.rb
+          sed -i "/on_intel do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.X64_SHA }}\"/" Casks/floatpane.rb
 
       - name: Commit and push changes
         run: |
-          cd homebrew-floatplane
+          cd homebrew-floatpane
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add Casks/floatplane.rb
-          git commit -m "Update cask for Floatplane version ${{ env.RELEASE_VERSION }}"
+          git add Casks/floatpane.rb
+          git commit -m "Update cask for floatpane version ${{ env.RELEASE_VERSION }}"
           git push

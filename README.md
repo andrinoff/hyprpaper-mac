@@ -1,23 +1,23 @@
-# Floatplane
+# floatpane
 
 <p align="center">
-  <img src="assets/icon.svg" alt="Floatplane Logo" width="128">
+  <img src="assets/icon.svg" alt="floatpane Logo" width="128">
 </p>
 
 <h3 align="center">A lightweight, floating wallpaper selector for macOS.</h3>
 
 <p align="center">
-  <img src="https://img.shields.io/github/v/release/andrinoff/floatplane?style=for-the-badge" alt="Version">
-  <img src="https://img.shields.io/github/license/andrinoff/floatplane?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/github/v/release/andrinoff/floatpane?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/github/license/andrinoff/floatpane?style=for-the-badge" alt="License">
 </p>
 
 ---
 
-Floatplane is a minimal utility for macOS that lets you quickly browse and set your desktop wallpaper. It's designed to be invoked with a global keyboard shortcut and floats above all other windows, making it compatible with tiling window managers like Aerospace and yabai.
+floatpane is a minimal utility for macOS that lets you quickly browse and set your desktop wallpaper. It's designed to be invoked with a global keyboard shortcut and floats above all other windows, making it compatible with tiling window managers like Aerospace and yabai.
 
 ## Demo
 
-![Floatplane Demo](assets/floatplane-preview.gif)
+![floatpane Demo](assets/floatpane-preview.gif)
 
 ## Features
 
@@ -38,9 +38,9 @@ Floatplane is a minimal utility for macOS that lets you quickly browse and set y
 ## Installation
 
 ```
-$ brew tap andrinoff/floatplane
-$ brew install floatplane
-$ xattr -cr /Applications/Floatplane.app
+$ brew tap andrinoff/floatpane
+$ brew install floatpane
+$ xattr -cr /Applications/floatpane.app
 ```
 
 ## Installation & Usage (for Developers)
@@ -48,8 +48,8 @@ $ xattr -cr /Applications/Floatplane.app
 1.  **Clone the repository:**
 
     ```sh
-    git clone https://github.com/andrinoff/floatplane.git
-    cd floatplane
+    git clone https://github.com/andrinoff/floatpane.git
+    cd floatpane
     ```
 
 2.  **Install dependencies:**
