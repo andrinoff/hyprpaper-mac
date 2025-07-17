@@ -51,6 +51,67 @@ const SettingsIcon = () => (
   </svg>
 );
 
+const GithubIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+  </svg>
+);
+
+// --- Settings Menu Component ---
+const SettingsMenu = ({ isVisible, onClose, gridCols, setGridCols }) => {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    if (isVisible) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div style={styles.settingsOverlay} onClick={onClose}>
+      <div style={styles.settingsModal} onClick={(e) => e.stopPropagation()}>
+        <div style={styles.settingsHeader}>
+          <h2 style={styles.settingsTitle}>Settings</h2>
+          <button style={styles.closeButton} onClick={onClose}>
+            ×
+          </button>
+        </div>
+        <div style={styles.settingsContent}>
+          <div style={styles.settingRow}>
+            <label htmlFor="gridCols" style={styles.sliderLabel}>
+              Grid Columns: {gridCols}
+            </label>
+            <input
+              id="gridCols"
+              type="range"
+              min="2"
+              max="10"
+              value={gridCols}
+              onChange={(e) => setGridCols(parseInt(e.target.value, 10))}
+              style={styles.slider}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Lazy Loading Image Component ---
 // This component efficiently loads thumbnails only when they are visible.
 
@@ -442,7 +503,6 @@ const getStyles = (theme) => ({
     borderColor: theme.colors.primary,
     boxShadow: `0 0 15px ${theme.colors.primary}99, 0 0 5px ${theme.colors.primary}, inset 0 0 10px ${theme.colors.primary}4d`,
   },
-  image: { width: "100%", height: "100%", objectFit: "cover" },
   imageOverlay: {
     position: "absolute",
     inset: 0,
