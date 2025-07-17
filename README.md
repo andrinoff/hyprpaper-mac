@@ -35,6 +35,14 @@ Floatplane is a minimal utility for macOS that lets you quickly browse and set y
 - A `~/wallpapers` directory containing your images.
 - [GitHub CLI](https://cli.github.com/) (only for publishing releases).
 
+## Installation
+
+```
+$ brew tap andrinoff/floatplane
+$ brew install floatplane
+$ xattr -cr /Applications/Floatplane.app
+```
+
 ## Installation & Usage (for Developers)
 
 1.  **Clone the repository:**
