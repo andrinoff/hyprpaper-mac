@@ -17,12 +17,10 @@
       {
         "assets": [
           {
-            "path": "dist-electron/*-arm64.dmg",
-            "label": "macOS Installer (Apple Silicon)"
+            "path": "dist-electron/*-arm64.dmg"
           },
           {
-            "path": "dist-electron/*-x64.dmg",
-            "label": "macOS Installer (Intel)"
+            "path": "dist-electron/*-x64.dmg"
           }
         ]
       }
