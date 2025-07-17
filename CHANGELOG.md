@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/andrinoff/Floatplane/compare/v1.4.1...v1.4.2) (2025-07-17)
+
+
+### Bug Fixes
+
+* added more themes ([881a987](https://github.com/andrinoff/Floatplane/commit/881a98729e5b144718ab18d63989dd33f148ee3d))
+
 ## [1.4.1](https://github.com/andrinoff/Floatplane/compare/v1.4.0...v1.4.1) (2025-07-17)
 
 
