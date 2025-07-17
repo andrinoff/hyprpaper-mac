@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Fetch Latest Release and Stars from GitHub ---
-  const repo = "andrinoff/floatplane";
+  const repo = "andrinoff/floatpane";
   const versionSpan = document.getElementById("latest-version");
   const installLink = document.getElementById("install-link");
   const starsSpan = document.getElementById("github-stars");
