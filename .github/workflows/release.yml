@@ -1,4 +1,4 @@
-name: Release
+name: Release and Update Homebrew Cask
 
 on:
   push:
@@ -11,51 +11,64 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    outputs:
+      new_release_version: ${{ steps.semantic.outputs.new_release_version }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Node.js
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 21
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
-      - name: Release
-        run: npx semantic-release
+      - name: Semantic Release
+        id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          branch: master
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   update-homebrew-cask:
     name: Update Homebrew Cask
     needs: release
+    if: needs.release.outputs.new_release_version
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get new version tag
-        run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
+      - name: Set Release Version Env
+        run: echo "RELEASE_VERSION=${{ needs.release.outputs.new_release_version }}" >> $GITHUB_ENV
 
       - name: Download release assets
         run: |
-          # FIX: Use the dynamic release tag instead of 'master'
-          gh release download ${{ env.RELEASE_VERSION }} --pattern 'Floatplane-*.dmg'
+          gh release download ${{ env.RELEASE_VERSION }} --pattern "Floatplane-*.dmg" --repo ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Calculate checksums
         run: |
-          echo "ARM64_SHA=$(shasum -a 256 Floatplane-${{ env.RELEASE_VERSION }}-arm64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
-          echo "X64_SHA=$(shasum -a 256 Floatplane-${{ env.RELEASE_VERSION }}-x64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+          VERSION_NUMBER=${{ env.RELEASE_VERSION }}
+          # Remove 'v' prefix for filename, which matches your electron-builder artifactName
+          VERSION_NUMBER_NO_V=${VERSION_NUMBER#v}
+          echo "ARM64_SHA=$(shasum -a 256 Floatplane-${VERSION_NUMBER_NO_V}-arm64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
+          echo "X64_SHA=$(shasum -a 256 Floatplane-${VERSION_NUMBER_NO_V}-x64.dmg | cut -d' ' -f1)" >> $GITHUB_ENV
 
       - name: Clone Homebrew tap repository
         run: |
-          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com/andrinoff/homebrew-floatplane.git
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/andrinoff/homebrew-floatplane.git
 
       - name: Update Cask file
         run: |
           cd homebrew-floatplane
-          # Remove 'v' prefix from version tag for the cask file
           VERSION_NUMBER=${{ env.RELEASE_VERSION }}
-          sed -i "s/version \".*\"/version \"${VERSION_NUMBER#v}\"/" Casks/floatplane.rb
+          # Remove 'v' prefix from version tag for the cask file
+          VERSION_NUMBER_NO_V=${VERSION_NUMBER#v}
+          sed -i "s/version \".*\"/version \"${VERSION_NUMBER_NO_V}\"/" Casks/floatplane.rb
           sed -i "/on_arm do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.ARM64_SHA }}\"/" Casks/floatplane.rb
           sed -i "/on_intel do/,/end/ s/sha256 \".*\"/sha256 \"${{ env.X64_SHA }}\"/" Casks/floatplane.rb
 
