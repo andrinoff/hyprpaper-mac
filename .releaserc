@@ -21,7 +21,7 @@
             "label": "macOS Installer (Apple Silicon)"
           },
           {
-            "path": "dist-electron/*-.dmg",
+            "path": "dist-electron/*-x64.dmg",
             "label": "macOS Installer (Intel)"
           }
         ]
