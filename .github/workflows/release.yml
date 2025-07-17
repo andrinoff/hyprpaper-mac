@@ -25,14 +25,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   update-homebrew-cask:
     name: Update Homebrew Cask
-    needs: release # Make this job wait for your 'release' job to succeed
+    needs: release
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Get new version tag
         run: echo "RELEASE_VERSION=${{ github.ref_name }}" >> $GITHUB_ENV
 
       - name: Download release assets
         run: |
+          # FIX: Use the dynamic release tag instead of 'master'
           gh release download ${{ env.RELEASE_VERSION }} --pattern 'Floatplane-*.dmg'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
