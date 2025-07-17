@@ -137,8 +137,6 @@ app.on("will-quit", () => {
 
 // --- IPC Handlers ---
 
-
-
 ipcMain.handle("get-settings", async () => {
   return await getSettings();
 });
@@ -161,7 +159,7 @@ ipcMain.handle("save-settings", async (event, settings) => {
 });
 
 ipcMain.handle("get-themes", async () => {
-  const themeDir = path.join(__dirname, "src/themes");
+  const themeDir = path.join(__dirname, "dist/themes");
   try {
     const files = await fs.readdir(themeDir);
     const themes = await Promise.all(

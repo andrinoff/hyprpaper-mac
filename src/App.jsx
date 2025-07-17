@@ -503,6 +503,14 @@ const getStyles = (theme) => ({
     borderColor: theme.colors.primary,
     boxShadow: `0 0 15px ${theme.colors.primary}99, 0 0 5px ${theme.colors.primary}, inset 0 0 10px ${theme.colors.primary}4d`,
   },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover", // This is the magic property!
+    position: "absolute",
+    top: 0,
+    left: 0,
+  },
   imageOverlay: {
     position: "absolute",
     inset: 0,

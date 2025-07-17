@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   // The entry point for the renderer process
@@ -45,6 +46,8 @@ module.exports = {
       filename: "index.html",
       chunks: ["main"],
     }),
-    
+    new CopyWebpackPlugin({
+      patterns: [{ from: "src/themes", to: "themes" }],
+    }),
   ],
 };
