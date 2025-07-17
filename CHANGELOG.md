@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/andrinoff/Floatplane/compare/v1.3.1...v1.3.2) (2025-07-17)
+
+
+### Bug Fixes
+
+* actions to homebrew cask update ([1ff1cea](https://github.com/andrinoff/Floatplane/commit/1ff1cea3aaeed6970160136c06bc01b5d4ba5557))
+
 ## [1.3.1](https://github.com/andrinoff/Floatplane/compare/v1.3.0...v1.3.1) (2025-07-17)
 
 
