@@ -411,11 +411,11 @@ const App = () => {
                 <FolderIcon />
               </button>
               <a
-                href="https://github.com/andrinoff/floatpane"
+                href="https://github.com/floatpane/floatpane"
                 onClick={(e) => {
                   e.preventDefault();
                   window.api.openExternalLink(
-                    "https://github.com/andrinoff/floatpane"
+                    "https://github.com/floatpane/floatpane"
                   );
                   window.api.hideWindow();
                 }}

@@ -60,7 +60,7 @@ jobs:
 
       - name: Clone Homebrew tap repository
         run: |
-          git clone https://x-access-token:${{ secrets.PAT }}@github.com/andrinoff/floatpane-cask.git
+          git clone https://x-access-token:${{ secrets.PAT }}@github.com/floatpane/floatpane-cask.git
 
       - name: Update Cask file
         run: |
