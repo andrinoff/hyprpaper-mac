@@ -1,3 +1,10 @@
+## [1.4.6](https://github.com/andrinoff/floatpane/compare/v1.4.5...v1.4.6) (2025-07-18)
+
+
+### Bug Fixes
+
+* **docs:** GIF updated ([a168e68](https://github.com/andrinoff/floatpane/commit/a168e68cf7e7c36a2b013ce9a4e309ad218a4e0e))
+
 ## [1.4.5](https://github.com/andrinoff/floatpane/compare/v1.4.4...v1.4.5) (2025-07-17)
 
 
