@@ -1,7 +1,7 @@
 # floatpane
 
 <p align="center">
-  <img src="assets/icon.svg" alt="floatpane Logo" width="128">
+  <img src="https://raw.githubusercontent.com/floatpane/floatpane/master/assets/icon.svg" alt="floatpane Logo" width="128">
 </p>
 
 <h3 align="center">A lightweight, floating wallpaper selector for macOS.</h3>
@@ -17,16 +17,17 @@
 
 ## 🎬 Demo
 
-![floatpane Demo](assets/floatpane-preview.gif)
+![floatpane Demo](https://raw.githubusercontent.com/floatpane/floatpane/master/assets/floatpane-preview.gif)
 
 ## ✨ Features
 
-- **Summon** Summon the wallpaper grid from anywhere with `Cmd+Shift+P`.
-- **Floating Window:** Designed to float on top of all other applications, ensuring it's always accessible.
-- **Tiling WM Friendly:** Works seamlessly with **Aerospace**, **yabai**, and **Amethyst**.
-- **⌨️ Keyboard Navigation:** Use arrow keys to navigate, `Enter` to select, and `Esc` to close.
-- **️ Lazy Loading:** Thumbnails are loaded efficiently as you scroll for a fast, responsive experience.
-- **🎨 Themes:** Customize the look and feel of floatpane with a variety of built-in themes.
+- **⚡ Summon:** Bring up the wallpaper grid from anywhere with `Cmd+Shift+P`.
+- **🖼️ Floating Window:** Floats on top of all other applications for easy access.
+- **🧩 Tiling WM Friendly:** Integrates smoothly with Aerospace, yabai, and Amethyst.
+- **⌨️ Keyboard Navigation:** Use arrow keys to browse, `Enter` to apply, and `Esc` to dismiss.
+- **🚀 Lazy Loading:** Thumbnails load as you scroll for a fast, responsive experience.
+- **✅ Current Wallpaper Indicator:** Your active wallpaper is always highlighted.
+- **🎨 Themes:** Customize the look and feel with multiple built-in themes.
 
 ## 📋 Requirements
 
@@ -45,3 +46,54 @@ brew install floatpane
 # Fix for macOS Gatekeeper
 xattr -cr /Applications/floatpane.app
 ```
+
+### For Developers
+
+1.  **Clone the repository:**
+
+    ```sh
+    git clone https://github.com/floatpane/floatpane.git
+    cd floatpane
+    ```
+
+2.  **Install dependencies:**
+
+    ```sh
+    npm install
+    ```
+
+3.  **Run in development mode:**
+
+    You'll need two terminal windows for this.
+
+    - In **Terminal 1**, start the webpack watcher:
+      ```sh
+      npm run watch
+      ```
+    - In **Terminal 2**, start the Electron app:
+      ```sh
+      npm start
+      ```
+
+## 🎨 Available Themes
+
+Floatpane includes a variety of themes to match your style. You can change the theme in the settings (`Cmd+,`).
+
+- Aura
+- Ayu Dark
+- Cobalt2
+- Dracula
+- Gruvbox Dark
+- Material Theme
+- Monokai
+- Night Owl
+- Nord
+- One Dark Pro
+- Panda Syntax
+- Solarized Dark
+- Synthwave '84
+- Tokyo Night Blue
+
+## 📜 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
