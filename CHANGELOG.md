@@ -1,3 +1,11 @@
+## [1.4.8](https://github.com/floatpane/floatpane/compare/v1.4.7...v1.4.8) (2025-07-18)
+
+
+### Bug Fixes
+
+* update README ([81a85cd](https://github.com/floatpane/floatpane/commit/81a85cdab753dc9fb2500351682fda6c028f5f97))
+* update REAMD ([02e8fa8](https://github.com/floatpane/floatpane/commit/02e8fa8c9e5331f22749e32cc9915893cc670864))
+
 ## [1.4.7](https://github.com/floatpane/floatpane/compare/v1.4.6...v1.4.7) (2025-07-18)
 
 
