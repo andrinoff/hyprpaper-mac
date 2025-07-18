@@ -1,3 +1,11 @@
+## [1.4.7](https://github.com/floatpane/floatpane/compare/v1.4.6...v1.4.7) (2025-07-18)
+
+
+### Bug Fixes
+
+* remove makefile ([1552a20](https://github.com/floatpane/floatpane/commit/1552a2069e6ca60d5dd8ddd3df484b4cbfd4ccd3))
+* updated links ([56dc611](https://github.com/floatpane/floatpane/commit/56dc61154fb5fdeab2dd0785a960efdd855a7715))
+
 ## [1.4.6](https://github.com/andrinoff/floatpane/compare/v1.4.5...v1.4.6) (2025-07-18)
 
 
