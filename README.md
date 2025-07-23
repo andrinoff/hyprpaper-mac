@@ -75,6 +75,16 @@ xattr -cr /Applications/floatpane.app
       npm start
       ```
 
+## 🌅 Wallpapers
+
+You can find all the wallpapers I use by going to [andrinoff/wallpapers](https://github.com/andrinoff/wallpapers)
+
+OR
+
+```sh
+curl -sS https://andrinoff.com/wallpapers/download.sh | sh
+```
+
 ## 🎨 Available Themes
 
 Floatpane includes a variety of themes to match your style. You can change the theme in the settings (`Cmd+,`).
